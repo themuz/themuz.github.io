@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: MessageDlgVM</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: MessageDlgVM</h1>
+
+    
+
+
+
+<section>
+
+<header>
+    <h2>
+    MessageDlgVM
+    </h2>
+    
+        <div class="class-description"><p>MessageDlgVM</p></div>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="MessageDlgVM"><span class="type-signature"></span>new MessageDlgVM<span class="signature">(config)</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <h1>Message Dlg View Model (MessageDlgVM)</h1><p>Display a message dialogue, then call &quot;callback&quot; function when item selected.</p>
+<h3>Usage (Class):-</h3><pre class="prettyprint source"><code>new MessageDlgVM( {
+    message: 'Click a Button',
+    buttons: 'yes,no,ok,cancel', // Combination of yes,no,ok,cancel,abort,retry,ignore
+    title: 'Dialogue Title', // Defaults to window.document.title
+    onCloseCallback: function(viewmodel) {
+       alert('You clicked the &quot;' + viewmodel.selected + '&quot; button');}
+}).showModal();</code></pre><h3>Usage (Static Function):-</h3><pre class="prettyprint source"><code>MessageDlgVM.messageDlg( 
+    'Click a Button',
+    'yes,no,ok,cancel', // Combination of yes,no,ok,cancel,abort,retry,ignore
+    onCloseCallback: function(viewmodel) {
+       alert('You clicked the &quot;' + viewmodel.selected + '&quot; button');}
+);</code></pre><p>Callback: The call back is passed the instance of MessageDlgVM. the property &quot;selected&quot; contains the button clicked</p>
+<h3>extends ViewModelBase</h3>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Configuration settings. { None }</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MessageDlgVM.js.html">vmrStarter/MessageDlgVM.js</a>, <a href="MessageDlgVM.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="messageDlg"><span class="type-signature">(static) </span>messageDlg<span class="signature">(message, buttons, onCloseCallback)</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Display a message dialogue, then call &quot;callback&quot; function when item selected.</p>
+<p>Callback: The call back is passed the instance of a MessageDlgVM, the property &quot;selected&quot; contains the button clicked</p>
+<p>Example:</p>
+<pre class="prettyprint source"><code>MessageDlgVM.messageDlg (
+    'Really close, Your changes will be lost',
+    'yes,no',
+    function(msgdlg) {
+        if ( msgdlg.selected == 'yes ')
+            alert('Exiting, changes NOT saved');}
+});</code></pre>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Message</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>buttons</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Combination of yes,no,ok,cancel,abort,retry,ignore</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onCloseCallback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>onCloseCallback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MessageDlgVM.js.html">vmrStarter/MessageDlgVM.js</a>, <a href="MessageDlgVM.js.html#line118">line 118</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onClickButton"><span class="type-signature">(protected) </span>onClickButton<span class="signature">(ev)</span><span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>User Clicked a button, set selected property, and close.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ev</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">DOM-Event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Event triggers, ev.target  must be the container the message was from</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="MessageDlgVM.js.html">vmrStarter/MessageDlgVM.js</a>, <a href="MessageDlgVM.js.html#line98">line 98</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-requireLite.html">requireLite</a></li><li><a href="module-vmrLite.html">vmrLite</a></li></ul><h3>Classes</h3><ul><li><a href="MessageDlgVM.html">MessageDlgVM</a></li><li><a href="ShowModalVM.html">ShowModalVM</a></li><li><a href="StackedUIVM.html">StackedUIVM</a></li><li><a href="TabbedUIVM.html">TabbedUIVM</a></li><li><a href="ViewModelBase.html">ViewModelBase</a></li><li><a href="ViewModelOuter.html">ViewModelOuter</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Sat Oct 11 2014 21:18:18 GMT+1300 (New Zealand Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
