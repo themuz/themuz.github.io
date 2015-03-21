@@ -1,0 +1,413 @@
+
+html {
+ font-size: 11pt;     
+
+}
+body {
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+    Zbackground-color: #ececec;
+}
+
+div#body {
+    vertical-align: top;
+}
+
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
+  body {
+    Zbackground-color: pink;
+    width: 100vw;    
+  }
+}
+fieldset {
+    padding: 0.35rem;
+    display: inline-block;
+    width: 100%;
+    max-width: 24rem;
+    vertical-align: top;    
+    box-sizing: border-box; 
+}
+
+fieldset.extras {
+    width: 48%;
+}
+fieldset.extras.right {
+    zfloat: right;
+    text-align: right;
+}
+
+div#partnership_container {
+    display: inline-block;
+    vertical-align: top;
+    width: 60%;    
+}
+
+div#partnership_container > fieldset > table > tbody > tr > td {
+    padding-top: 8px;
+
+}
+div#extras_container {    display: inline-block;
+    width: 40%;    
+}
+
+
+
+
+label {
+    font-size: 0.8rem;
+}
+
+label.fixed {
+    display: inline-block;    
+    width: 2.8rem;
+}
+
+b.stats, span.stats {
+    font-size: 0.9em;
+    display: inline-block;
+    width: 1rem;
+    text-align: right;    
+}
+
+
+b.small, span.small {
+    font-size: 0.8rem;
+}
+
+div.main {
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    padding: 4px;
+    width: 59%;
+}
+
+
+a {
+    cursor: pointer;
+    text-decoration: none;        
+}
+
+h2 {
+    background-color: pink;
+    margin: 0.2rem;
+    border-radius: 6px;
+    padding: 0.6rem;
+
+}
+button {
+    background-color: white;
+}
+button.was {
+    Zwidth: 12%;
+}
+button.onstrike {
+  border: dotted 1px black;
+  font-size: 1.6rem; padding: 0
+}
+
+select.partner1 {
+  background-color: #FFFFdd;    
+}
+button.partner1 {
+  background-color: #FFFFdd;
+}
+button.partner1.selected {
+    background-color: #FFFF00;    
+}
+
+
+select.partner2 {
+  background-color: #eeFFFF;    
+}
+button.partner2 {
+  background-color: #eeFFFF;
+}
+button.partner2.selected {
+    background-color: #00FFFF;    
+}
+
+button.selected {
+    background-color: pink;
+}
+
+
+button {
+    height: 2rem;
+    min-width: 2.2rem;
+    background-color: white;
+}
+
+button.small {
+    vertical-align: top;
+    font-size: 0.7rem;
+    min-width: 0.2rem;
+}
+
+button.wide {
+    min-width: 2.9rem;
+}
+
+
+button.runs {
+    width: 5rem;    
+}
+
+ 
+select.small {
+    font-size: 0.8rem;
+}
+
+
+button.disabled {
+    color: silver;
+}
+button.ball {
+    min-width: 2.5rem;
+}
+
+
+
+span.score {
+    font-size: 0.8rem;
+    background-color: white;
+    border-radius: 10px;
+    padding: 2px 8px;
+    color: black;
+    margin-right: 8px;
+}
+
+input[type="radio"]+label{
+  border: solid 1px black;
+  padding: 0.2rem;
+}
+
+input[type="radio"]:checked+label{
+  background-color: yellow;
+}
+
+span.ballInOver {
+    padding-right: 0.3rem;
+    font-size: 1.2rem;
+}
+
+span.selected {
+    background-color: yellow;
+}
+
+button.nextover.selected {
+    background-color: Hotpink;
+
+}
+
+span.markup {
+    display: inline-block;
+    border-left: dotted 1px gray;
+    padding: 0 4px 0 4px;
+    font-size: 0.8rem;
+}
+
+h1 {
+    margin: 0;
+    padding: 8px;
+    font-size: 1.5rem;   
+    color: white;
+}
+
+h1 > span {
+   font-size: 1rem;
+}
+
+select {
+    padding: 4px;
+}
+
+select.required {
+    border: solid 2px maroon;
+}
+
+th {
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+
+th.right, td.right {
+    text-align: right;
+    padding-right: 0.2rem;
+}
+
+th.small, td.small {
+    font-size: 0.7em;
+}
+
+div.popout {
+    display: none;
+    z-index: 100; /* high z-index */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #FAFAFA;
+    color: #757575;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+div.popout a {
+    text-decoration: none;    
+}
+
+div.popout a.icon {
+    padding: 0 8px;
+    color: #808080;
+}
+
+div.popout a.tick {
+    color: #000080;
+}
+div.popout a.cross {
+    color: #800000;
+}
+
+div.popout a.icon:hover {
+    color: black;
+}
+div.popout h1 {
+    background-color: #6699FF;
+}
+
+
+div.popout ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+   
+div.popout li span {    
+    color: #B2B2B2;    
+    font-size: 0.9rem;
+    padding: 0 1rem;    
+}
+div.popout li a {
+    color: #757575;
+    font-weight: bold;
+    font-size: 1rem;
+    display: block;
+    
+    padding: 1em 1rem;
+}
+
+div.popout li a:hover {
+    background-color: #E1E1E1;
+
+}
+div.popout li {
+/* http://www.w3schools.com/tags/ref_colorpicker.asp */
+}
+
+div.modal-background {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    cursor: not-allowed;
+    z-index: 100; /* high z-index */
+    background: hsla(206, 33%, 24%,0.5);
+    text-align: center;
+}
+
+div.modal-window {
+    display: inline-block;
+    min-width: 32rem;    
+    padding: 4px;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    margin-top: 2%;
+    cursor: default;
+    text-align: left;
+    z-index: 101; /* high z-index */    
+}
+
+
+div.modal-window a {
+    cursor: pointer;
+}
+div.modal-title-bar {
+    padding: 6px;
+    border-bottom: 4px solid #c0c0c0;
+}
+div.modal-title-bar div {
+    font-weight: bold;
+}
+a.modal-title-bar-button {
+    padding: 0;
+    padding-left: 6px;    
+    color: #aaa;
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: bold;
+    float: right;
+}
+
+a:hover, 
+a:focus, 
+a:active {
+    color: black;
+}
+
+span.title {
+
+}
+
+div.trigram {
+    content: "";
+    position: absolute;
+    left: 0;
+    display: block;
+    width: 16px;
+    top: 0;
+    height: 0;
+    -webkit-box-shadow: 1px 10px 1px 1px #69737d,1px 16px 1px 1px #69737d,1px 22px 1px 1px #69737d;
+    box-shadow: 0 10px 0 1px #69737d,0 16px 0 1px #69737d,0 22px 0 1px #69737d;
+} 
+
+div.page-header {
+    background-color: #3366FF; 
+}
+
+
+a.link-menu {
+   font-size: 1.5rem;
+   color: white;
+   opacity: 0.75;
+   padding: 0 0.3rem;
+}
+
+a.link-menu:hover  {
+   opacity: 1;
+}
+
+
+
+input[type="text"] {
+    margin: 2px 0;
+    padding: 2px;
+    font-size: 1.2rem;
+}
+
+div.popout button {
+    margin-top: 4px;
+    display:block;
+    width:100%;
+}
+
+div.popout label {
+    color: #999;
+}

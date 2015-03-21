@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html zzmanifest="cache.manifest">
+<!-- to Clear/remove cache goto chrome://appcache-internals/ -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=yes"/>
+    <title>Cricket Scoring</title>
+    <!-- http://yui.github.io/skinbuilder/ http://www.colorcombos.com/ -->
+    <!-- Color Scheme with #153450 #294052 #447294 #8FBCDB #F4D6BC #F8E4CC -->
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="cricket-score.css"/>
+
+    <script src="lib/vmrLite.js" type="text/javascript"></script>
+    <script src="cricket-score.js" type="text/javascript"></script>
+</head>
+<body onload="app.init();">
+<div id="body">
+
+<div class="page-header">
+    <h1>
+        <a class="link-menu" vm-onclick="app.onClickOpenPopoutMenu" style="float:left">&equiv;</a>
+        <span class="score">
+            <span vm-text='this.getScore()'></span>
+            <small>for</small>
+            <span vm-text='this.nWickets'></span>
+        </span>
+        <span vm-text="this.getTitle()">Cricket Scoring.</span>
+    </h1>
+</div>
+
+<fieldset id="partnership" style="padding-top: 0;">
+    <legend>Partnership</legend>
+    <table width="100%">
+        <thead>
+        <tr>
+            <th width="1%"></th>
+            <th></th>
+            <th class="right" width="10%">Bf</th>
+            <th class="right" width="10%">4s</th>
+            <th class="right" width="10%">6s</th>
+            <th class="right" width="10%">R</th>
+            <th class="right small" width="10%">SR</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr vm-with="this.getPartner1()">
+            <td>
+                <button class="onstrike"
+                        vm-on-click="vm.onClickBattersCrossed"
+                        vm-text="(vm.ball && this.id==vm.ball.batterId)?'&raquo;':''">Z</button>
+            </td>
+            <td><select class="partner1"
+                        vm-selected="(vm.ball && this.id==vm.ball.batterId)"
+                        vm-value="this.id" vm-on-change="onChangePartner">
+                <option value=''>Choose...</option>
+                <option vm-each="vm.batters" vm-text="this.name" vm-value="this.id"></option>
+            </select></td>
+            <td class="right" vm-html="app.fmtNumber(this.nBFaced)">B</td>
+            <td class="right" vm-html="app.fmtNumber(this.n4s)"></td>
+            <td class="right" vm-html="app.fmtNumber(this.n6s)"></td>
+            <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
+            <td class="right small" vm-html="app.fmtNumber(this.strikeRate)">SR</td>
+        </tr>
+        <tr vm-with="this.getPartner2()">
+            <td>
+                <button class="onstrike"
+                        vm-on-click="vm.onClickBattersCrossed"
+                        vm-text="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)?'&raquo;':''">Z</button>
+            </td>
+            <td><select class="partner2"
+                        vm-selected="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)"
+                        vm-value="this.id" vm-on-change="onChangePartner">
+                <option value=''>Choose...</option>
+                <option vm-each="vm.batters" vm-text="this.name" vm-value="this.id"></option>
+            </select></td>
+            <td class="right" vm-html="app.fmtNumber(this.nBFaced)">B</td>
+            <td class="right" vm-html="app.fmtNumber(this.n4s)"></td>
+            <td class="right" vm-html="app.fmtNumber(this.n6s)"></td>
+            <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
+            <td class="right small" vm-html="app.fmtNumber(this.strikeRate)">SR</td>
+        </tr>
+        </tbody>
+    </table>
+</fieldset>
+
+<fieldset id="over" vm-onclick="onClickBall"  style="padding-top: 0">
+        <legend vm-text="over.getName()"></legend>
+        <table width="100%">
+            <thead>
+            <tr>
+                <th></th><th></th>
+                <th class="right" width="10%">O</th>
+                <th class="right" width="10%">B</th>
+                <th class="right" width="10%">R</th>
+                <th class="right small" width="10%">Eco</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr vm-with="this.getBowler()">
+                <td><label  class="fixed">Batter:</label></td>
+                <td><select class="xx"
+                            vm-value="this.id" vm-on-change="onChangeBowler">
+                    <option value=''>Choose...</option>
+                    <option vm-each="vm.bowlers" vm-text="this.name" vm-value="this.id" /></select>
+                </td>
+                <td class="right" vm-html="app.fmtNumber(this.nOvers)">99</span></td>
+                <td class="right small" vm-html="app.fmtNumber(this.nBalls)">99</span></td>
+                <td class="right" vm-html="app.fmtNumber(this.nRuns+nNoball+nWides)">99</span></td>
+                <td class="right small" vm-html="app.fmtNumber(this.econ)">99.1</span></td>
+            </tr>
+            <tr>
+                <td><label class="fixed">Balls:</label></td>
+                <td colspan="5">
+                    <button class="ball"
+                            vm-class-partner1="this.batterId == vm.partner1Id"
+                            vm-class-partner2="this.batterId == vm.partner2Id"
+                            vm-selected='this===vm.ball' vm-each="this.over.balls" vm-html = "this.getMarkup()"></button>
+                </td>
+            </tr>
+            <tr>
+                <td><label class="fixed">Nav:</label></td>
+                <td colspan="5">
+                    <button vm-onclick="REBUILD">[R]</button>
+                    <button vm-onclick="this.onClickOverPrev" title="Prev Over">&lt;&lt;</button>
+                    <button vm-onclick="this.onClickBallPrev" title="Prev Ball">&lt;</button>
+                    <button vm-onclick="this.onClickBallInsert" title="Insert Ball">*</button>
+                    <button vm-onclick="vm.onClickBallDelete" title="Delete Ball">&cross;</button>
+                    <button vm-onclick="this.onClickBallNext"  title="Next/New Ball">&gt;</button>
+                    <button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </fieldset>
+
+<fieldset id="ball" style="min-height: 5.2rem">
+    <legend vm-text="this.ball ? ball.getName() : 'Ball # End of over' "></legend>
+    <div vm-with="this.ball" >
+        <span vm-onclick="onClickWas">
+            <button class="was runs" value="-" vm-selected="this.was=='-'" title="Runs">Runs</button>
+            <button value="b" class="was" vm-selected="this.was=='b'" title="Bye">&bigtriangleup;</button>
+            <button value="l" class="was" vm-selected="this.was=='l'" title="Leg bye">&bigtriangledown;</button>
+            <button value="w" class="was" vm-selected="this.was=='w'" title="Wide">&plus;</button>
+            <button value="n" class="was" vm-selected="this.was=='n'" title="No Ball">&#x298;</button>
+            <button value="N" class="was" vm-selected="this.was=='N'" title="No Ball+Runs Off Bat">&#x2461;</button> +
+            <button value="w" class="was" vm-selected="this.dismissal=='w'" vm-onclick="onClickDismissal">D</button>
+        </span><br/>
+        <fieldset id="dismissal" vm-display="this.dismissal=='w'">
+            <legend>Dismissal</legend>
+            <select vm-value='this.dismissalBy' vm-on-change="onChangeDismissalBy">
+                <option value=''>Select ...</option>
+                <option vm-each="Ball.dismissalKeys" vm-value="this" vm-text="Ball.dismissalMap[this]"></option>
+            </select>
+            <span vm-display="this.dismissalBy=='c'||this.dismissalBy=='+'">
+                <label>Players Crossed: </label>
+                <input type="checkbox" vm-value="this.dismissalCrossed=='x'" value="x"
+                       vm-on-change="onChangeDismissalCrossed"/>
+            </span>
+            <br/>
+            <span vm-display="this.dismissalBy=='c'||this.dismissalBy=='r'||this.dismissalBy=='R'">
+                <label>By:</label>
+                <select vm-value="this.dismissalFielderId"
+                        vm-on-change="onChangeDismissalFielderId">
+                    <option value="">Select ...</option>
+                    <option vm-each="vm.bowlers" vm-value="this.id" vm-text="this.name"></option>
+                </select>
+            </span>
+            <label><i>Click # Runs to confirm</i></label>
+        </fieldset>
+
+        <span vm-onclick="onClickRuns">
+        <button value="0" class="wide" id="ball_was_0"
+                vm-selected="ball.runs=='0'" vm-disabled="this.was=='b'||this.was=='l'">0
+        </button>
+        <button value="1" class="wide" vm-selected="this.runs=='1'">1</button>
+        <button value="2" vm-selected="this.runs=='2'">2</button>
+        <button value="3" class="small" vm-selected="this.runs=='3'">3</button>
+        <button value="4" vm-selected="this.runs=='4'">4</button>
+        <button value="5" class="small" vm-selected="this.runs=='5'">5</button>
+        <button value="6" vm-selected="this.runs=='6'">6</button>
+        <button value="7" class="small" vm-selected="this.runs=='7'">7</button>
+        <button value="8" class="small" vm-selected="this.runs=='8'">8</button>
+        </span>
+    </div>
+    <div vm-display="!this.ball">
+        <h2><button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;</button> to continue.</h2>
+    </div>
+</fieldset>
+
+<div id="extras">
+    <fieldset id="fielding_extras" class="extras">
+        <legend>Fielding Extras</legend>
+        <label>Bye: </label><b vm-text='this.nBye'></b>
+        <label>L-Bye: </label> <b vm-text='this.nLbye'></b>
+    </fieldset>
+    <fieldset id="bowling_extras" class="extras right">
+        <legend>Bowling Extras</legend>
+        <label>No-Ball: </label><b vm-text='this.nNoball'></b>
+        <label>Wide: </label><b vm-text='this.nWides'></b>
+    </fieldset>
+</div>
+
+<fieldset id="bowlers" >
+    <legend>Bowlers</legend>
+    <table width="100%">
+        <thead>
+        <tr>
+            <th width="5%"></th>
+            <th></th>
+            <!-- http://en.wikipedia.org/wiki/Cricket_statistics#Bowling_statistics -->
+            <th class="right" title="No balls (Nb): The number of no balls bowled.">Nb</th>
+            <th class="right" title="Wides (Wd): The number of wides bowled">Wd</th>
+            <th class="right" title="Overs (O): The number of overs or partial bowled.">O</th>
+            <th class="right small" title="Balls (B): The number of balls bowled">B</th>
+            <th class="right" title="Maiden overs (M): The number of maiden overs (overs in which the bowler conceded zero runs) bowled">M</th>
+            <th class="right" title="Runs (R): The number of runs conceded.">R</th>
+            <th class="right" title="Wickets (W): The number of wickets taken.">W</th>
+            <th class="right small" title="Economy rate (Econ): The average number of runs conceded per over. (Econ = Runs/Overs bowled).">Econ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr vm-each="bowlers">
+            <td><span vm-text="this.name" vm-selected="this.id===vm.over.bowlerId">N</span></td>
+            <td>
+                <span class="markup" vm-each="overs" vm-selected='this===vm.over' vm-html="this.getMarkup()"></span>
+            </td>
+            <td class="right" vm-html="app.fmtNumber(nNoball)">Nb</td>
+            <td class="right" vm-html="app.fmtNumber(nWides)">Wd</td>
+            <td class="right" vm-html="app.fmtNumber(nOvers)">O</td>
+            <td class="right small" vm-html="app.fmtNumber(nBalls)">B</td>
+            <td class="right" vm-html="app.fmtNumber(nMaiden)">M</td>
+            <td class="right" vm-html="app.fmtNumber(this.nRuns+nNoball+nWides)">R</td>
+            <td class="right" vm-html="app.fmtNumber(nWickets)">W</td>
+            <td class="right small" vm-html="app.fmtNumber(econ)">Econ</td>
+
+        </tr>
+        </tbody>
+    </table>
+</fieldset>
+
+<fieldset id="batters" >
+    <legend>Batters</legend>
+    <table width="100%">
+        <thead>
+        <tr>
+            <th width="5%">Batters</th>
+            <th>Overs</th>
+            <!-- http://en.wikipedia.org/wiki/Cricket_statistics#Bowling_statistics -->
+            <th class="right"
+                title="Balls faced (BF): The total number of balls received, including no balls but not including wides">
+                Bf
+            </th>
+            <th class="right">4s</th>
+            <th class="right">6s</th>
+            <th class="right" title="Runs (R): The number of runs scored">R</th>
+            <th class="right small"
+                title="Strike rate (SR): The average number of runs scored per 100 balls faced. (SR = [100 * Runs]/BF)">
+                SR
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr vm-each="batters">
+            <td><span vm-text="(vm._parentHack=this).name" vm-selected="this.id==vm.ball.batterId"></span>
+            </td>
+            <td>
+                <span class="markup" vm-each="overs"
+                      vm-selected="this===vm.over"
+                      vm-html="this.getMarkup4BatterId(vm._parentHack.id)"></span>
+            </td>
+            <td class="right" vm-html="app.fmtNumber(nBFaced)">B</td>
+            <td class="right" vm-html="app.fmtNumber(n4s)"></td>
+            <td class="right" vm-html="app.fmtNumber(n6s)"></td>
+            <td class="right" vm-html="app.fmtNumber(nRuns)">R</td>
+            <td class="right small" vm-html="app.fmtNumber(strikeRate)">SR</td>
+        </tr>
+        </tbody>
+    </table>
+</fieldset>
+</div>
+
+<div class="popout" id="popout_menu" vm-onclick="this.onClickClosePopouts">
+<h1>Innings <a href="#" class="icon" title="Close" style="float:right">&#x2716;</a></h1>
+<ul>
+    <li><hr /><span>Edit</span><li>
+    <li><a href="#" vm-onclick="this.onClickPopoutEditName">Name / Date</a></li>
+    <li><a href="#" vm-onclick="this.onClickPopoutEditBatters">Batters</a></li>
+    <li><a href="#" vm-onclick="this.onClickPopoutEditBowlers">Bowlers</a></li>
+    <li><hr /><li>
+    <li><a href="#" vm-onclick="this.onClickSaveToStorage">Save</a></li>
+    <li><a href="#" vm-onclick="this.onClickPopoutLoad">Load</a></li>
+    <li><a href="#" vm-onclick="this.onClickNewInnings">New Innings <small>(Blank)</small></a></li>
+    <li><a href="#" vm-onclick="this.onClickCloneInnings">New Innings <small>(Home&lt;-&gt;Away)</small></a></li>
+    <li><hr /><li>
+    <li><a href="#" vm-onclick="this.onClickPopoutAbout">About</a></li>
+</ul>
+</div>
+
+<div class="popout" id="popout_editName">
+    <h1>Name Edit
+        <a href="#" class="icon cross" vm-onclick="this.onClickClosePopouts" style="float:right">&#x2716;</a>
+        <a href="#" class="icon tick" vm-onclick="this.onClickSaveName" style="float:right">&#x2714;</a>
+    </h1>
+    <br />
+    <label for="app_homeName">Batting Team</label><br />
+    <input type="text" id="app_homeName" size="20" vm-value="this.properties.homeName" autocomplete="off"/><br />
+    <br />
+    vs<br />
+    <br />
+    <label for="app_awayName">Bowling Team</label><br />
+    <input type="text" id="app_awayName" size="20" vm-value="this.properties.awayName" autocomplete="off"/><br />
+    <br />
+    <label for="app_onDate">Date/Time</label><br />
+    <input type="text" id="app_onDate" size="20" vm-value="this.properties.onDate" autocomplete="off"/><br />
+    <br />
+</div>
+
+<div class="popout" id="popout_load">
+    <h1>Load Innings
+        <a href="#" class="icon cross" vm-onclick="this.onClickClosePopouts" style="float:right">&#x2716;</a>
+        <a href="#" class="icon tick" vm-onclick="this.onClickLoadInnings" style="float:right">&#x2714;</a>
+    </h1>
+    <br />
+    <label for="select_innings">Innings</label><br />
+    <select id="select_innings">
+        <option vm-each="Object.keys(this.inningsList)" vm-text="this" vm-value="this"></option>
+    </select>
+    <a vm-onclick="this.onClickDeleteInnings" title="delete">&cross;</a>
+</div>
+
+<div class="popout" id="popout_editBatters">
+    <h1>Batters
+        <a href="#" class="icon cross" vm-onclick="this.onClickClosePopouts" style="float:right">&#x2716;</a>
+        <a href="#" class="icon tick" vm-onclick="this.onClickSaveBatters" style="float:right">&#x2714;</a>
+    </h1>
+    <div vm-each="this.batters">
+        <label vm-text="'Batter ' + String(index+1)">Batter X</label>
+        <input vm-value="this.name" type="text" size="20" autocomplete="off" />
+    </div>
+</div>
+
+<div class="popout" id="popout_editBowlers">
+    <h1>Bowlers/Fielding
+        <a href="#" class="icon cross" vm-onclick="this.onClickClosePopouts" style="float:right">&#x2716;</a>
+        <a href="#" class="icon tick" vm-onclick="this.onClickSaveBowlers" style="float:right">&#x2714;</a>
+    </h1>
+    <div vm-each="this.bowlers">
+        <label vm-text="'Bowler ' + String(index+1)">Bowler X</label>
+        <input vm-value="this.name" type="text" size="20" autocomplete="off" />
+    </div>
+</div>
+
+<div class="popout" id="popout_about">
+    <h1>About
+        <a href="#" class="icon cross" vm-onclick="this.onClickClosePopouts" style="float:right">&#x2716;</a>
+    </h1>
+    <div style="text-align:center">
+
+    <h3>Cricket Scoring</h3>
+    <h4>Version: 0.1</h4>
+
+    By: Murray Speight<br />
+    <br />
+    Used to learn html + Web apps.<br />
+    <br />
+    Uses vmrLite library<br />
+    [<a target="_blank" style="font-size: 0.8rem" href="https://github.com/themuz/vmrLite">https://github.com/themuz/vmrLite</a>]
+    <br/>
+    </div>
+</div>
+</body>
+</html>
+
