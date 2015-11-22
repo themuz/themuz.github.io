@@ -1,6 +1,6 @@
 "use strict";
 
-/* global window, console, document, module, vmrLite, $id, alert */
+/* global window, console, document, module, vmrLite, $eid, alert */
 
 
 // ======================================================================
@@ -803,11 +803,13 @@ app.onClickBallNext = function(ev) {
 
         this.over.recalc();
     }
-    if ( this.ball.isBlank()  && bIdx > 0 )
+    if ( this.ball.isBlank() && bIdx > 0 )
         this.ball.setBatterBasedOnLastBall(app.over.balls[bIdx-1]);
 
     this.render('ballNover');
-    ev.preventDefault(); ev.stopPropagation();    
+    if ( ev ) {
+        ev.preventDefault(); ev.stopPropagation();            
+    }
 };
 
 
@@ -1170,9 +1172,15 @@ app.loadInnings = function(iname) {
     i=app.over.balls.length-1;
     while ( (i > 0) && app.over.balls[i].isBlank() )
         i--;
-    app.ball = app.over.balls[i];
-
+    app.ball = null;
     app.REBUILD();
+
+    if ( i != (this.over.balls.length-1) ) {
+        // NOT end of over
+        this.ball = this.over.balls[i];
+        this.onClickBallNext(null);
+    }
+
 };
 
 
@@ -1335,7 +1343,7 @@ app.onClickCloseModal = function(ev) {
 
 
 app.onClickOpenPopoutMenu = function(ev) {
-    $id('popout_menu').style.display = 'block';
+    $eid('popout_menu').style.display = 'block';
 };
 
 
@@ -1345,7 +1353,7 @@ app.onClickClosePopouts = function(ev) {
         nlist[i].style.display = 'none';
 
     ev.preventDefault(); ev.stopPropagation();  
-    //  $id('popout_menu').style.display = 'none';
+    //  $eid('popout_menu').style.display = 'none';
 };
 
 
@@ -1353,7 +1361,7 @@ app.onClickClosePopouts = function(ev) {
 
 app.onClickPopoutLoad = function(ev) {
     this.onClickClosePopouts(ev);
-    $id('popout_load').style.display = 'block';
+    $eid('popout_load').style.display = 'block';
 };
 
 
@@ -1377,7 +1385,7 @@ app.onClickNewInnings = function(ev) {
 
 app.onClickCloneInnings = function(ev) {
 
-    // this.saveInnings();
+    this.saveInnings();
     var i,len;
     var fromInnings = {
         properties : this.properties,
@@ -1408,7 +1416,7 @@ app.onClickCloneInnings = function(ev) {
 
 
 app.onClickLoadInnings = function(ev) {
-    var iname = $id('select_innings').value;
+    var iname = $eid('select_innings').value;
     this.loadInnings(iname);
 
     this.onClickClosePopouts(ev);
@@ -1418,7 +1426,7 @@ app.onClickLoadInnings = function(ev) {
 };
 
 app.onClickDeleteInnings = function(ev) {
-    var iname = $id('select_innings').value;
+    var iname = $eid('select_innings').value;
     this.deleteInnings(iname);
     app.render();
 
@@ -1427,13 +1435,13 @@ app.onClickDeleteInnings = function(ev) {
 
 app.onClickPopoutEditName = function(ev) {
     this.onClickClosePopouts(ev);
-    var e=$id('popout_editName');
+    var e=$eid('popout_editName');
     vmrLite.render(e,this);
     e.style.display = 'block';
 };
 
 app.onClickSaveName = function(ev) {
-    var e=$id('popout_editName');
+    var e=$eid('popout_editName');
     vmrLite.sync(e,this);
     e.style.display = 'none';
     app.render();
@@ -1441,14 +1449,14 @@ app.onClickSaveName = function(ev) {
 
 app.onClickPopoutEditBatters = function(ev) {
     this.onClickClosePopouts(ev);
-    var e=$id('popout_editBatters');
+    var e=$eid('popout_editBatters');
     vmrLite.render(e,this);
     e.style.display = 'block';
 
 };
 
 app.onClickSaveBatters = function(ev) {
-    var e=$id('popout_editBatters');
+    var e=$eid('popout_editBatters');
     vmrLite.sync(e,this);
     e.style.display = 'none';
     app.render();
@@ -1456,14 +1464,14 @@ app.onClickSaveBatters = function(ev) {
 
 app.onClickPopoutEditBowlers = function(ev) {
     this.onClickClosePopouts(ev);
-    var e=$id('popout_editBowlers');
+    var e=$eid('popout_editBowlers');
     vmrLite.sync(e,this);
     e.style.display = 'block';
 };
 
 
 app.onClickSaveBowlers = function(ev) {
-    var e=$id('popout_editBowlers');
+    var e=$eid('popout_editBowlers');
     vmrLite.sync(e,this);
     e.style.display = 'none';
     app.render();
@@ -1471,7 +1479,7 @@ app.onClickSaveBowlers = function(ev) {
 
 app.onClickPopoutAbout = function(ev) {
     this.onClickClosePopouts(ev);
-    var e=$id('popout_about');
+    var e=$eid('popout_about');
     vmrLite.sync(e,this);
     e.style.display = 'block';
 };
