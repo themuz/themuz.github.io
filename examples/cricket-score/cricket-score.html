@@ -49,74 +49,41 @@
     </h1>
 </div>
 
-<fieldset id="partnership" style="padding-top: 0;">
-    <legend>Partnership</legend>
-    <table width="100%">
-        <thead>
-        <tr>
-            <th width="1%"></th>
-            <th></th>
-            <th class="right" width="10%">Bf</th>
-            <th class="right" width="10%">4s</th>
-            <th class="right" width="10%">6s</th>
-            <th class="right" width="10%">R</th>
-            <th class="right small" width="10%">SR</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr vm-with="this.getPartner1()">
-            <td>
-                <span class="onstrike"
-                        Zvm-on-click="vm.onClickBattersCrossed"
-                        vm-text="(vm.ball && this.id==vm.ball.batterId)?'&raquo;':''">Z</span>
-            </td>
-            <td><select class="partner1"
-                        vm-selected="(vm.ball && this.id==vm.ball.batterId)"
-                        vm-value="this.id" vm-on-change="onChangePartner">
-                <option value=''>Choose...</option>
-                <option vm-each="vm.batters" vm-text="this.name" vm-value="this.id"></option>
-            </select></td>
-            <td class="right" vm-html="app.fmtNumber(this.nBFaced)">B</td>
-            <td class="right" vm-html="app.fmtNumber(this.n4s)"></td>
-            <td class="right" vm-html="app.fmtNumber(this.n6s)"></td>
-            <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
-            <td class="right small" vm-html="app.fmtNumber(this.strikeRate)">SR</td>
-        </tr>
-        <tr vm-with="this.getPartner2()">
-            <td>
-                <span class="onstrike"
-                        Zvm-on-click="vm.onClickBattersCrossed"
-                        vm-text="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)?'&raquo;':''">Z</span>
-            </td>
-            <td><select class="partner2"
-                        vm-selected="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)"
-                        vm-value="this.id" vm-on-change="onChangePartner">
-                <option value=''>Choose...</option>
-                <option vm-each="vm.batters" vm-text="this.name" vm-value="this.id"></option>
-            </select></td>
-            <td class="right" vm-html="app.fmtNumber(this.nBFaced)">B</td>
-            <td class="right" vm-html="app.fmtNumber(this.n4s)"></td>
-            <td class="right" vm-html="app.fmtNumber(this.n6s)"></td>
-            <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
-            <td class="right small" vm-html="app.fmtNumber(this.strikeRate)">SR</td>
-        </tr>
-        </tbody>
-    </table>
-</fieldset>
-
 <fieldset id="over" vm-onclick="onClickBall"  style="padding-top: 0">
         <legend vm-text="over.getName()"></legend>
         <table width="100%">
             <thead>
             <tr>
                 <th></th><th></th>
-                <th class="right" width="10%">O</th>
-                <th class="right" width="10%">B</th>
+                <th class="right" width="10%">Bf</th>
                 <th class="right" width="10%">R</th>
-                <th class="right small" width="10%">Eco</th>
             </tr>
             </thead>
             <tbody>
+
+            <tr class="batter" vm-with="this.getPartner1()" vm-selected="(vm.ball && this.id==vm.ball.batterId)">
+                <td><label  class="fixed">Batter:</label></td>
+                <td>
+                    <select class="partner1"
+                            vm-selected="(vm.ball && this.id==vm.ball.batterId)"
+                            vm-value="this.id" vm-on-change="onChangePartner">
+                    <option value=''>Choose...</option>
+                    <option vm-each="vm.batters" vm-text="this.name" vm-value="this.id"></option>
+                </select></td>
+                <td class="right small" vm-html="app.fmtNumber(this.nBFaced)">Bf</td>
+                <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
+            </tr>
+            <tr class="batter" vm-with="this.getPartner2()" vm-selected="(vm.ball && this.id==vm.ball.batterId)">
+                <td><label  class="fixed">Batter:</label></td>
+                <td><select class="partner2"
+                            vm-selected="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)"
+                            vm-value="this.id" vm-on-change="onChangePartner">
+                    <option value=''>Choose...</option>
+                    <option vm-each="vm.batters" vm-text="this.name" vm-value="this.id"></option>
+                </select></td>
+                <td class="right small" vm-html="app.fmtNumber(this.nBFaced)">Bf</td>
+                <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
+            </tr>      
             <tr vm-with="this.getBowler()">
                 <td><label  class="fixed">Bowler:</label></td>
                 <td><select class="xx"
@@ -124,11 +91,9 @@
                     <option value=''>Choose...</option>
                     <option vm-each="vm.bowlers" vm-text="this.name" vm-value="this.id" /></select>
                 </td>
-                <td class="right" vm-html="app.fmtNumber(this.nOvers)">99</span></td>
-                <td class="right small" vm-html="app.fmtNumber(this.nBalls)">99</span></td>
-                <td class="right" vm-html="app.fmtNumber(this.nRuns+nNoball+nWides)">99</span></td>
-                <td class="right small" vm-html="app.fmtNumber(this.econ)">99.1</span></td>
-            </tr>
+                <!--td class="right small" vm-html="app.fmtNumber(this.nBalls)">99</span></td-->
+                <!--td class="right" vm-html="app.fmtNumber(this.nRuns+this.nNoball+this.nWides)">99</span></td-->
+            </tr>                  
             <tr>
                 <td><label class="fixed">Balls:</label></td>
                 <td colspan="5">
@@ -141,13 +106,13 @@
             <tr>
                 <td><label class="fixed">Nav:</label></td>
                 <td colspan="5">
-                    <button vm-onclick="REBUILD">[R]</button>
                     <button vm-onclick="this.onClickOverPrev" title="Prev Over">&lt;&lt;</button>
                     <button vm-onclick="this.onClickBallPrev" title="Prev Ball">&lt;</button>
                     <!-- button vm-onclick="this.onClickBallInsert" title="Insert Ball">&plus;</button -->
                     <button vm-onclick="vm.onClickBallDelete" title="Delete Ball">&#9249;</button>
                     <button vm-onclick="this.onClickBallNext"  title="Next/New Ball">&gt;</button>
                     <button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;</button>
+                    <button vm-onclick="REBUILD">[R]</button>
                 </td>
             </tr>
             </tbody>
@@ -229,14 +194,14 @@
             <th width="5%"></th>
             <th></th>
             <!-- http://en.wikipedia.org/wiki/Cricket_statistics#Bowling_statistics -->
-            <th class="right" title="No balls (Nb): The number of no balls bowled.">Nb</th>
-            <th class="right" title="Wides (Wd): The number of wides bowled">Wd</th>
+            <!--th class="right" title="No balls (Nb): The number of no balls bowled.">Nb</th-->
+            <!--th class="right" title="Wides (Wd): The number of wides bowled">Wd</th-->
             <th class="right" title="Overs (O): The number of overs or partial bowled.">O</th>
             <th class="right small" title="Balls (B): The number of balls bowled">B</th>
             <th class="right" title="Maiden overs (M): The number of maiden overs (overs in which the bowler conceded zero runs) bowled">M</th>
             <th class="right" title="Runs (R): The number of runs conceded.">R</th>
             <th class="right" title="Wickets (W): The number of wickets taken.">W</th>
-            <th class="right small" title="Economy rate (Econ): The average number of runs conceded per over. (Econ = Runs/Overs bowled).">Econ</th>
+            <!--th class="right small" title="Economy rate (Econ): The average number of runs conceded per over. (Econ = Runs/Overs bowled).">Econ</th-->
         </tr>
         </thead>
         <tbody>
@@ -245,14 +210,14 @@
             <td>
                 <span class="markup" vm-each="overs" vm-selected='this===vm.over' vm-html="this.getMarkup()"></span>
             </td>
-            <td class="right" vm-html="app.fmtNumber(nNoball)">Nb</td>
-            <td class="right" vm-html="app.fmtNumber(nWides)">Wd</td>
+            <!--td class="right" vm-html="app.fmtNumber(nNoball)">Nb</td-->
+            <!--td class="right" vm-html="app.fmtNumber(nWides)">Wd</td-->
             <td class="right" vm-html="app.fmtNumber(nOvers)">O</td>
             <td class="right small" vm-html="app.fmtNumber(nBalls)">B</td>
             <td class="right" vm-html="app.fmtNumber(nMaiden)">M</td>
             <td class="right" vm-html="app.fmtNumber(this.nRuns+nNoball+nWides)">R</td>
             <td class="right" vm-html="app.fmtNumber(nWickets)">W</td>
-            <td class="right small" vm-html="app.fmtNumber(econ)">Econ</td>
+            <!--td class="right small" vm-html="app.fmtNumber(econ)">Econ</td-->
 
         </tr>
         </tbody>
@@ -271,13 +236,13 @@
                 title="Balls faced (BF): The total number of balls received, including no balls but not including wides">
                 Bf
             </th>
-            <th class="right">4s</th>
-            <th class="right">6s</th>
+            <!--th class="right">4s</th-->
+            <!--th class="right">6s</th-->
             <th class="right" title="Runs (R): The number of runs scored">R</th>
-            <th class="right small"
+            <!--th class="right small"
                 title="Strike rate (SR): The average number of runs scored per 100 balls faced. (SR = [100 * Runs]/BF)">
                 SR
-            </th>
+            </th-->
         </tr>
         </thead>
         <tbody>
@@ -290,10 +255,10 @@
                       vm-html="this.getMarkup4BatterId(vm._parentHack.id)"></span>
             </td>
             <td class="right" vm-html="app.fmtNumber(nBFaced)">B</td>
-            <td class="right" vm-html="app.fmtNumber(n4s)"></td>
-            <td class="right" vm-html="app.fmtNumber(n6s)"></td>
+            <!--td class="right" vm-html="app.fmtNumber(n4s)"></td-->
+            <!--td class="right" vm-html="app.fmtNumber(n6s)"></td-->
             <td class="right" vm-html="app.fmtNumber(nRuns)">R</td>
-            <td class="right small" vm-html="app.fmtNumber(strikeRate)">SR</td>
+            <!--td class="right small" vm-html="app.fmtNumber(strikeRate)">SR</td-->
         </tr>
         </tbody>
     </table>
@@ -378,7 +343,7 @@
     <div style="text-align:center">
 
     <h3>Cricket Scoring</h3>
-    <h4>Version: 0.2 (2014-11-22)</h4>
+    <h4>Version: 0.3 (2014-11-22)</h4>
 
     By: Murray Speight<br />
     <br />
@@ -400,16 +365,7 @@ window.addEventListener("load",function() {
 });   
 </script>
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-55679541-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 </body>
 </html>
 

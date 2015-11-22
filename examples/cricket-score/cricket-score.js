@@ -1420,7 +1420,7 @@ app.onClickLoadInnings = function(ev) {
     this.loadInnings(iname);
 
     this.onClickClosePopouts(ev);
-    alert( this.getTitle()  + ' Loaded');
+    // alert( this.getTitle()  + ' Loaded');
 
     app.render();
 };

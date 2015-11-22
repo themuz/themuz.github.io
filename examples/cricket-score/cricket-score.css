@@ -131,9 +131,6 @@ span.onstrike {
   font-size: 1.6rem; padding: 0
 }
 
-select.partner1 {
-  background-color: #FFFFdd;    
-}
 button.partner1 {
   background-color: #FFFFdd;
 }
@@ -154,6 +151,16 @@ button.partner2.selected {
 
 button.selected {
     background-color: pink;
+}
+
+
+tr.batter.selected td {
+    background-color: pink;
+
+}
+
+tr.batter + tr.batter td {
+    border-bottom: solid gray 2px;
 }
 
 
