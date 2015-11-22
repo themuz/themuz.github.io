@@ -6,6 +6,8 @@ html {
 body {
     font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
     Zbackground-color: #ececec;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 div#body {
@@ -18,6 +20,30 @@ div#body {
     width: 100vw;    
   }
 }
+
+/* Get rid of ugly grey tap highlight */
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+/* give users feedback when they tap something that's tappable. */
+button:active {
+  color: green;
+}
+/* Remove Glossy Looking Buttons in Safari */
+button {
+    -webkit-appearance: carret;
+    -webkit-appearance: none; /* alernatively */
+}
+
+/* Disable Selection/Copy When Long Tapping */
+/* Allow Text Selection For Input */
+/* Better Looking Text */
+body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: text;
+    text-rendering: optimizeLegibility;
+}
+
 fieldset {
     padding: 0.35rem;
     display: inline-block;
@@ -100,8 +126,8 @@ button {
 button.was {
     Zwidth: 12%;
 }
-button.onstrike {
-  border: dotted 1px black;
+span.onstrike {
+  Zborder: dotted 1px black;
   font-size: 1.6rem; padding: 0
 }
 

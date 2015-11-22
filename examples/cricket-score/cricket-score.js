@@ -3,6 +3,14 @@
 /* global window, console, document, module, vmrLite, $id, alert */
 
 
+// ======================================================================
+
+
+var app={};
+
+app._id = '123456';
+
+
 
 function Ball(config) {
     if (!(this instanceof Ball)) { // If invoked as a factory by mistake
@@ -76,7 +84,7 @@ Ball.prototype.toString = function() {
     // b = Bye = &bigtriangleup;
     // g = Leg Bye = &bigtriangledown;
 
-    return  this.was + this.runs + this.out;
+    return  this.was + this.runs + this.dismissal;
 };
 
 
@@ -126,9 +134,9 @@ Ball.prototype.recalc = function() {
         this.nBalls=1;
         this.nBFaced=1;
         this.nBye = runsInt;
-        this.markup = '&bigtriangleup;';
+        this.markup = '&bigtriangleup;'; // Triange for 1st run.
         if ( this.nBye > 1 ) {
-            this.markup += '<sup>';
+            this.markup += '<sup>'; // Plus x Dots for 2nd+ runs
             for (i=1;i<runsInt;i++)
               this.markup += '&bull;';
             this.markup += '</sup>';
@@ -137,9 +145,9 @@ Ball.prototype.recalc = function() {
         this.nBalls=1;
         this.nBFaced=1;
         this.nLbye = runsInt;
-        this.markup = '&bigtriangledown;';
+        this.markup = '&bigtriangledown;'; // down-triangle for 1st run
         if ( this.nLbye > 1 ) {
-            this.markup += '<sup>';
+            this.markup += '<sup>'; // Plus x Dots for 2nd+ runs
             for (i=1;i<runsInt;i++)
               this.markup += '&bull;';
             this.markup += '</sup>';
@@ -148,34 +156,33 @@ Ball.prototype.recalc = function() {
         this.nBalls=1;
         this.nBFaced = 0; // Wides don't count as balls faced to a batter
         this.nWides = 1;
-        this.markup = '+';
+        this.markup = '+'; // Plus 
         if ( runsInt > 0 ) {
             this.nWides = 1 + runsInt;
             this.markup += '<sup>';
-            for (i=0;i<runsInt;i++)
+            for (i=0;i<runsInt;i++) // Plus x Dots for any runs made
               this.markup += '&bull;';
             this.markup += '</sup>';
         }        
     } else if ( this.was == 'n' ) { // No Ball 
         this.nBalls=1;
-        this.nBFaced=1;
+        this.nBFaced=1; // No balls count as balls faced
         this.nNoball = 1;
         this.markup = 'O'; // &cir;  &CircleDot; 
         if ( runsInt > 0 ) {
             this.nNoball = 1 + runsInt; // Dont add to bye (as not fault of wicket-keeper)
             this.markup += '<sup>';
-            for (i=0;i<runsInt;i++)
+            for (i=0;i<runsInt;i++) // Plus x Dots for any runs made
               this.markup += '&bull;';
             this.markup += '</sup>';
         }    
     } else if ( this.was == 'N' ) { // No Ball (with runs off the Bat)
         this.nBalls=1;
-        this.nBFaced=1;
+        this.nBFaced=1; // No balls count as balls faced
         this.nNoball = 1;
         this.markup = 'O'; // &#x2460; Circle1
         if ( runsInt > 0 ) {
-            // this.nBalls = 1; // Should this count as ball faced, but its a No-ball
-            this.nRuns = runsInt;
+            this.nRuns = runsInt; // Plus a number for any runs of the bat
             this.markup += '<sup>' + String(runsInt) + '</sup>';
         }    
     } else if ( this.runs ) {
@@ -199,6 +206,7 @@ Ball.prototype.recalc = function() {
             this.markup += '<sup>r</sup>';  
         } else if ( this.dismissalBy == 'R' ) {
             // Dismissal of Non-Striker "R" (run-out)
+            // We should be able to work this out. from runs ? (No could be either end)
             this.markup += '<sup>R</sup>';  
         } else {
             // Striker out.
@@ -258,13 +266,13 @@ Ball.prototype.setBatterBasedOnLastBall = function(lastBall,endofOver) {
     if ( lastBall.nWides > 0  )
       nCross += ( lastBall.nWides - 1);
     // If odd number of Crosses. Switch batterId <=> nonStrikerId
-    if ( endofOver )  nCross++; // Bowler switch ends
+    if ( endofOver )  nCross++; // Bowlers are switching ends
     this.batterId = lastBall.batterId;
     this.nonStrikerId = lastBall.nonStrikerId;
     if ( lastBall.dismissal == 'w' ) { 
         if ( lastBall.dismissalCrossed == 'x' ) nCross++;
-        if ( lastBall.dismissalBy == 'U' ||
-             lastBall.dismissalBy == 'R' )
+        if ( lastBall.dismissalBy == 'U' || // Retired No striker
+             lastBall.dismissalBy == 'R' ) // Run-out Non striker
             this.nonStrikerId = '';
         else
             this.batterId = '';
@@ -297,12 +305,12 @@ function Over(config) {
         for (var k in config)
             this[k] = config[k];
         for (var bIdx=0;bIdx<this.balls.length;bIdx++) {
-            if (!(this.balls[bIdx] instanceof Ball)) { // Not a Ball Object.
+            if (!(this.balls[bIdx] instanceof Ball)) { // Not a Ball Object. // Used when loading..
                 this.balls[bIdx] = new Ball(this.balls[bIdx]);
             }               
         }
     }
-    while ( this.balls.length < 6 ) 
+    while ( this.balls.length < 6 ) // Min 6 balls an over
       this.balls.push( new Ball() );
 }
 
@@ -372,7 +380,7 @@ Over.prototype.recalc = function() {
         this.balls.push(new Ball());
     }
     // Delete (blanks) to Make the correct number of balls. in an Over.
-    // DONT do this. if you manually you need to manually delete. 
+    // DONT do this. if you manually add you need to manually delete. 
     return this;
 };
 
@@ -390,8 +398,9 @@ Over.prototype.getMarkup4BatterId = function(batterId) {
     var bIdx,markup='',ball,addComma=false,isMyDismissal=false;
     for (bIdx=0;bIdx<this.balls.length;bIdx++) {  
         ball = this.balls[bIdx];
+        // if ( ball.nBFaced > 0 ) {
         if ( ball.batterId == batterId ) {    
-           if ( addComma ) markup += ',';
+           if ( addComma ) markup += ',';// Comma is a switch ends 
            addComma =false;    
            markup += ball.getMarkup();
         } else {
@@ -410,8 +419,12 @@ Over.prototype.getMarkup4BatterId = function(batterId) {
                 else 
                   markup += ' - Dismissal';
                 if (ball.dismissalFielderId) {
-                    // Ahhh!! Using the app !!! FIXUP !!
-                    markup += ' (' + app.bowlerIdMap[ball.dismissalFielderId].name + ')';
+                    // Ahhh!! Using the app variable  !!! FIXUP !!
+                    markup += ' f-' + app.bowlerIdMap[ball.dismissalFielderId].name;
+                }
+                if (this.bowlerId) {
+                    // Ahhh!! Using the app variable  !!! FIXUP !!
+                    markup += ' b-' + app.bowlerIdMap[this.bowlerId].name;
                 }
             }
         }
@@ -494,12 +507,7 @@ Batter.prototype.clear = function() {
      
 
 
-// ======================================================================
 
-
-var app={};
-
-app._id = '123456';
 
 //================================================
 
@@ -551,7 +559,8 @@ app.setPartnership = function() {
 
 
 app.getPartner1 = function() {
-    // Try and keep partners in the same position.
+    // Try and keep partners in the same position. 
+    // So names dont keep moving.
     if ( this.ball ) {
         if (( this.partner1Id == this.ball.batterId ) ||
             ( this.partner1Id == this.ball.nonStrikerId && 
@@ -575,10 +584,10 @@ app.getPartner2 = function() {
     if ( this.ball ) {
         if (( this.partner2Id == this.ball.nonStrikerId ) ||
             ( this.partner2Id == this.ball.batterId && 
-                this.partner2Id != this.partner2Id )) {
-                // Partner1ID OK
+                this.partner1Id != this.partner2Id )) {
+                // Partner2ID OK
         } else {
-            // Partner1ID WRONG.
+            // Partner2ID WRONG.
             if ( this.partner1Id == this.ball.batterId ) { // Batter is on the screen already
                 this.partner2Id = this.ball.nonStrikerId; // Change to the nonStriker
             } else {
@@ -906,13 +915,34 @@ app.onChangeDismissalFielderId = function(ev) {
     this.render();    
     ev.preventDefault(); ev.stopPropagation();
 };
+
+app.switchBatterWithNonStriker = function() {
+    console.log('switchBatterWithNonStriker');
+
+    var v = this.ball.batterId;    
+    this.ball.batterId = this.ball.nonStrikerId;
+    this.ball.nonStrikerId = v;
+
+    v = this.partner1Id;    
+    this.partner1Id = this.ball.partner2Id;
+    this.partner2Id = v;
+
+};
+
 app.onChangePartner = function(ev) {
     var v = ev.target.value;
     if ( this.ball )  {
-        if ( ev.target.selected )
+        if ( ev.target.selected )  { // OnStrike, changed
+            if ( this.ball.nonStrikerId == v ) { // Changed person onstrike, to the non-striker, switch players
+              this.switchBatterWithNonStriker();
+            }
             this.ball.batterId = v;
-        else
+        } else {
+            if ( this.ball.batterId == v ) { // Changed person  to the striker, switch players
+              this.switchBatterWithNonStriker();
+            }
             this.ball.nonStrikerId = v;
+        }
     }
     this.over.recalc();
     this.REBUILD();
@@ -920,7 +950,7 @@ app.onChangePartner = function(ev) {
     ev.preventDefault(); ev.stopPropagation();    
 };
 
-
+// Not used
 app.onChangeBatter = function(ev) {
     var v = ev.target.value;
     this.ball.batterId = v;    
@@ -933,6 +963,7 @@ app.onChangeBatter = function(ev) {
     ev.preventDefault(); ev.stopPropagation();
 };
 
+// Not used
 app.onChangeNonStrike = function(ev) {
     var v = ev.target.value;    
     this.ball.nonStrikerId = v;    
@@ -945,6 +976,7 @@ app.onChangeNonStrike = function(ev) {
     ev.preventDefault(); ev.stopPropagation();
 };
 
+// Not used
 app.onClickBattersCrossed = function(ev) {
     console.log('onClickBattersCrossed');
 
@@ -1166,18 +1198,18 @@ app.newInnings = function() {
     this.batterBlank = new Batter();
     this.bowlerBlank = new Bowler();
     this.bowlers = [];
-    for (i=0;i<8;i++) {
+    for (i=0;i<11;i++) {
         this.bowler = new Bowler();
         this.bowler.id='00' + String(i+1);
-        this.bowler.name='Bowler ' + String(i+1);
+        this.bowler.name=String.fromCharCode(80+i,112+i,112+i,112+i,112+i,112+i,112+i);  // "P" 
         this.bowlers.push( this.bowler );    
     }
 
     this.batters = [];
-    for (i=0;i<8;i++) {
+    for (i=0;i<11;i++) {
         this.batter = new Batter();
         this.batter.id='00' + String(i+1);
-        this.batter.name='Batter ' + String(i+1);
+        this.batter.name= String.fromCharCode(65+i,97+i,97+i,97+i,97+i,97+i,97+i,97+i);  // "A"
 
         this.batter.bcolor = '#FFCCFF'; // Red
         if ( (i%3) == 1)
@@ -1187,11 +1219,40 @@ app.newInnings = function() {
 
         this.batters.push( this.batter );    
     }
+    this.batters[0].name = 'Henry';
+    this.batters[1].name = 'Jack';
+    this.batters[2].name = 'James';
+    this.batters[3].name = 'Liam';
+    this.batters[4].name = 'William';
+    this.batters[5].name = 'Noah';
+    this.batters[6].name = 'Ethan';
+    this.batters[7].name = 'Thomas';
+    this.batters[8].name = 'Lucas';
+    this.batters[9].name = 'Jacob';
+    this.batters[10].name = 'Max';
+
+    this.bowlers[0].name = 'Olivia';
+    this.bowlers[1].name = 'Emily';
+    this.bowlers[2].name = 'Sophie';
+    this.bowlers[3].name = 'Ella';
+    this.bowlers[4].name = 'Amelia';
+    this.bowlers[5].name = 'Ruby';
+    this.bowlers[6].name = 'Chloe';
+    this.bowlers[7].name = 'Mia';
+    this.bowlers[8].name = 'Ava';
+    this.bowlers[9].name = 'Samantha';
+    this.bowlers[10].name = 'Lily';
+
+
 
     this.overs=[];
     this.over = new Over();
+    this.over.bowlerId = this.bowlers[0].id;
     this.overs.push(this.over);
     this.ball = this.over.balls[0];
+    this.ball.batterId = this.batters[0].id;
+    this.ball.nonStrikerId = this.batters[1].id;
+    this.partner1Id = this.ball.batterId;
     this.REBUILD();     
 };
 
@@ -1257,7 +1318,7 @@ app.init = function() {
     } 
     window.localStorage.setItem('inningsList',JSON.stringify(this.inningsList));
     this.newInnings();
-    this.testInnings();
+    // this.testInnings();
     this.REBUILD();
     this.render();
 };

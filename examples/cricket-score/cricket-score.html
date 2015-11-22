@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html zzmanifest="cache.manifest">
+<html ZZmanifest="cache.manifest">
 <!-- to Clear/remove cache goto chrome://appcache-internals/ -->
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=yes"/>
     <title>Cricket Scoring</title>
+    <!-- set width, and user scaling -->
+    <meta name="viewport" content="width=device-width, user-scalable=yes"/>
+    <!-- android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
+    <!-- homescreen title -->
+    <meta name="apple-mobile-web-app-title" content="Cricket-Score">
+    <!-- IE -->
+    <meta http-equiv="cleartype" content="on">
+
+    <!-- unicode search http://www.amp-what.com/ -->
+
+    <!-- android touch icons -->
+    <!--link rel="shortcut icon" sizes="196x196" href="icon-196x196.png" -->
+    <!-- iOS touch icons -->
+    <!-- link rel="apple-touch-icon" href="touch-icon-iphone.png" -->
+
+    <!-- android splash - Not available -->
+    <!-- iOS splash -->
+    <!-- link rel="apple-touch-startup-image" href="img/l/splash.png" -->
     <!-- http://yui.github.io/skinbuilder/ http://www.colorcombos.com/ -->
     <!-- Color Scheme with #153450 #294052 #447294 #8FBCDB #F4D6BC #F8E4CC -->
     <link rel="stylesheet" href="css/normalize.css"/>
@@ -13,7 +34,7 @@
     <script src="lib/vmrLite.js" type="text/javascript"></script>
     <script src="cricket-score.js" type="text/javascript"></script>
 </head>
-<body onload="app.init();">
+<body>
 <div id="body">
 
 <div class="page-header">
@@ -45,9 +66,9 @@
         <tbody>
         <tr vm-with="this.getPartner1()">
             <td>
-                <button class="onstrike"
-                        vm-on-click="vm.onClickBattersCrossed"
-                        vm-text="(vm.ball && this.id==vm.ball.batterId)?'&raquo;':''">Z</button>
+                <span class="onstrike"
+                        Zvm-on-click="vm.onClickBattersCrossed"
+                        vm-text="(vm.ball && this.id==vm.ball.batterId)?'&raquo;':''">Z</span>
             </td>
             <td><select class="partner1"
                         vm-selected="(vm.ball && this.id==vm.ball.batterId)"
@@ -63,9 +84,9 @@
         </tr>
         <tr vm-with="this.getPartner2()">
             <td>
-                <button class="onstrike"
-                        vm-on-click="vm.onClickBattersCrossed"
-                        vm-text="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)?'&raquo;':''">Z</button>
+                <span class="onstrike"
+                        Zvm-on-click="vm.onClickBattersCrossed"
+                        vm-text="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)?'&raquo;':''">Z</span>
             </td>
             <td><select class="partner2"
                         vm-selected="(vm.ball && this.id==vm.ball.batterId && this.id!=vm.ball.nonStrikerId)"
@@ -97,7 +118,7 @@
             </thead>
             <tbody>
             <tr vm-with="this.getBowler()">
-                <td><label  class="fixed">Batter:</label></td>
+                <td><label  class="fixed">Bowler:</label></td>
                 <td><select class="xx"
                             vm-value="this.id" vm-on-change="onChangeBowler">
                     <option value=''>Choose...</option>
@@ -123,8 +144,8 @@
                     <button vm-onclick="REBUILD">[R]</button>
                     <button vm-onclick="this.onClickOverPrev" title="Prev Over">&lt;&lt;</button>
                     <button vm-onclick="this.onClickBallPrev" title="Prev Ball">&lt;</button>
-                    <button vm-onclick="this.onClickBallInsert" title="Insert Ball">*</button>
-                    <button vm-onclick="vm.onClickBallDelete" title="Delete Ball">&cross;</button>
+                    <!-- button vm-onclick="this.onClickBallInsert" title="Insert Ball">&plus;</button -->
+                    <button vm-onclick="vm.onClickBallDelete" title="Delete Ball">&#9249;</button>
                     <button vm-onclick="this.onClickBallNext"  title="Next/New Ball">&gt;</button>
                     <button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;</button>
                 </td>
@@ -368,6 +389,18 @@
     <br/>
     </div>
 </div>
+<script type="text/javascript">
+window.addEventListener("load",function() {
+    // Set a timeout...
+    setTimeout(function(){
+        // Hide the address bar!
+        window.scrollTo(0, 1);
+    }, 100);
+    app.init();
+});   
+</script>
+
+
 </body>
 </html>
 
