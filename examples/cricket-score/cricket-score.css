@@ -44,6 +44,62 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+
+h1 {
+    margin: 0;
+    padding: 8px;
+    font-size: 1.5rem;   
+    color: white;
+}
+
+h1 > span {
+   font-size: 1rem;
+}
+
+b.small, span.small {
+    font-size: 0.8rem;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;        
+}
+
+a:hover, 
+a:focus, 
+a:active {
+    color: black;
+}
+
+select {
+    padding: 4px;
+}
+
+select.small {
+    font-size: 0.8rem;
+}
+
+button.disabled {
+    color: silver;
+}
+
+
+th {
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+
+th.right, td.right {
+    text-align: right;
+    padding-right: 0.2rem;
+}
+
+th.small, td.small {
+    font-size: 0.7em;
+}
+
+
 fieldset {
     padding: 0.35rem;
     display: inline-block;
@@ -52,117 +108,6 @@ fieldset {
     vertical-align: top;    
     box-sizing: border-box; 
 }
-
-fieldset.extras {
-    width: 48%;
-}
-fieldset.extras.right {
-    zfloat: right;
-    text-align: right;
-}
-
-div#partnership_container {
-    display: inline-block;
-    vertical-align: top;
-    width: 60%;    
-}
-
-div#partnership_container > fieldset > table > tbody > tr > td {
-    padding-top: 8px;
-
-}
-div#extras_container {    display: inline-block;
-    width: 40%;    
-}
-
-
-
-
-label {
-    font-size: 0.8rem;
-}
-
-label.fixed {
-    display: inline-block;    
-    width: 2.8rem;
-}
-
-b.stats, span.stats {
-    font-size: 0.9em;
-    display: inline-block;
-    width: 1rem;
-    text-align: right;    
-}
-
-
-b.small, span.small {
-    font-size: 0.8rem;
-}
-
-div.main {
-    display: inline-block;
-    vertical-align: top;
-    box-sizing: border-box;
-    padding: 4px;
-    width: 59%;
-}
-
-
-a {
-    cursor: pointer;
-    text-decoration: none;        
-}
-
-h2 {
-    background-color: pink;
-    margin: 0.2rem;
-    border-radius: 6px;
-    padding: 0.6rem;
-
-}
-button {
-    background-color: white;
-}
-button.was {
-    Zwidth: 12%;
-}
-span.onstrike {
-  Zborder: dotted 1px black;
-  font-size: 1.6rem; padding: 0
-}
-
-button.partner1 {
-  background-color: #FFFFdd;
-}
-button.partner1.selected {
-    background-color: #FFFF00;    
-}
-
-
-select.partner2 {
-  background-color: #eeFFFF;    
-}
-button.partner2 {
-  background-color: #eeFFFF;
-}
-button.partner2.selected {
-    background-color: #00FFFF;    
-}
-
-button.selected {
-    background-color: pink;
-}
-
-
-tr.batter.selected td {
-    background-color: pink;
-
-}
-
-tr.batter + tr.batter td {
-    border-bottom: solid gray 2px;
-}
-
 
 button {
     height: 2rem;
@@ -180,25 +125,36 @@ button.wide {
     min-width: 2.9rem;
 }
 
-
-button.runs {
-    width: 5rem;    
+button.selected {
+    background-color: pink;
 }
 
- 
-select.small {
+
+label {
     font-size: 0.8rem;
 }
 
-
-button.disabled {
-    color: silver;
-}
-button.ball {
-    min-width: 2.5rem;
+label.fixed {
+    display: inline-block;    
+    width: 2.8rem;
 }
 
+/* page header */
 
+div.page-header {
+    background-color: #3366FF; 
+}
+
+div.page-header a.menuicon {
+   font-size: 1.5rem;
+   color: white;
+   opacity: 0.75;
+   padding: 0 0.3rem;
+}
+
+div.page-header a.menuicon:hover  {
+   opacity: 1;
+}
 
 span.score {
     font-size: 0.8rem;
@@ -209,28 +165,68 @@ span.score {
     margin-right: 8px;
 }
 
-input[type="radio"]+label{
-  border: solid 1px black;
-  padding: 0.2rem;
+
+/* fieldset#over */
+
+button.partner1 {
+  background-color: #FFFFdd;
+}
+select.partner1 {
+  background-color: #FFFFdd;
+}
+button.partner1.selected {
+  background-color: #FFFF00;    
 }
 
-input[type="radio"]:checked+label{
-  background-color: yellow;
+button.partner2 {
+  background-color: #eeFFFF;
+}
+select.partner2 {
+  background-color: #eeFFFF;    
+}
+button.partner2.selected {
+    background-color: #00FFFF;    
 }
 
-span.ballInOver {
-    padding-right: 0.3rem;
-    font-size: 1.2rem;
+fieldset#over tr.batter.selected td {
+    background-color: pink;
 }
 
-span.selected {
-    background-color: yellow;
+fieldset#over button {
+    min-width: 2.5rem;
 }
 
-button.nextover.selected {
-    background-color: Hotpink;
+/* fieldset#ball */
+
+fieldset#ball h2.endover {
+    background-color: pink;
+    margin: 0.2rem;
+    border-radius: 6px;
+    padding: 0.6rem;
 
 }
+
+/* fieldset#extras */
+
+fieldset#extras span.right {
+    display: inline-block;
+    float: right;
+}
+
+/* fieldset#bowlers */
+/* fieldset#batters  */
+
+fieldset#bowlers tr td {
+    border-bottom: 1px dotted gray;
+    padding-bottom: 2px;
+
+}
+
+fieldset#batters tr td {
+    border-bottom: 1px dotted gray;
+    padding-bottom: 2px;    
+}
+
 
 span.markup {
     display: inline-block;
@@ -239,39 +235,10 @@ span.markup {
     font-size: 0.8rem;
 }
 
-h1 {
-    margin: 0;
-    padding: 8px;
-    font-size: 1.5rem;   
-    color: white;
+span.selected {
+    background-color: yellow;
 }
 
-h1 > span {
-   font-size: 1rem;
-}
-
-select {
-    padding: 4px;
-}
-
-select.required {
-    border: solid 2px maroon;
-}
-
-th {
-    text-align: left;
-    font-size: 0.8rem;
-}
-
-
-th.right, td.right {
-    text-align: right;
-    padding-right: 0.2rem;
-}
-
-th.small, td.small {
-    font-size: 0.7em;
-}
 
 div.popout {
     display: none;
@@ -290,6 +257,7 @@ div.popout a {
     text-decoration: none;    
 }
 
+
 div.popout a.icon {
     padding: 0 8px;
     color: #808080;
@@ -307,6 +275,16 @@ div.popout a.icon:hover {
 }
 div.popout h1 {
     background-color: #6699FF;
+}
+
+div.popout button {
+    margin-top: 4px;
+    display:block;
+    width:100%;
+}
+
+div.popout label {
+    color: #999;
 }
 
 
@@ -336,68 +314,24 @@ div.popout li a:hover {
     background-color: #E1E1E1;
 
 }
-div.popout li {
-/* http://www.w3schools.com/tags/ref_colorpicker.asp */
+
+
+
+div.popout input[type="text"] {
+    margin: 2px 0;
+    padding: 2px;
+    font-size: 1.2rem;
 }
 
-div.modal-background {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    cursor: not-allowed;
-    z-index: 100; /* high z-index */
-    background: hsla(206, 33%, 24%,0.5);
-    text-align: center;
-}
 
-div.modal-window {
-    display: inline-block;
-    min-width: 32rem;    
-    padding: 4px;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid rgba(0,0,0,.2);
+div.popout a.move {
+    font-size: 1.2rem;
+    border: 1px dotted gray;
+    padding: 0 .3rem;
+    min-width: 1.3rem;
     border-radius: 6px;
-    box-shadow: 0 5px 15px rgba(0,0,0,.5);
-    margin-top: 2%;
-    cursor: default;
-    text-align: left;
-    z-index: 101; /* high z-index */    
 }
 
-
-div.modal-window a {
-    cursor: pointer;
-}
-div.modal-title-bar {
-    padding: 6px;
-    border-bottom: 4px solid #c0c0c0;
-}
-div.modal-title-bar div {
-    font-weight: bold;
-}
-a.modal-title-bar-button {
-    padding: 0;
-    padding-left: 6px;    
-    color: #aaa;
-    font-size: 1rem;
-    text-decoration: none;
-    font-weight: bold;
-    float: right;
-}
-
-a:hover, 
-a:focus, 
-a:active {
-    color: black;
-}
-
-span.title {
-
-}
 
 div.trigram {
     content: "";
@@ -411,36 +345,18 @@ div.trigram {
     box-shadow: 0 10px 0 1px #69737d,0 16px 0 1px #69737d,0 22px 0 1px #69737d;
 } 
 
-div.page-header {
-    background-color: #3366FF; 
+
+
+
+
+
+/* unkonwn */
+
+b.stats, span.stats {
+    font-size: 0.9em;
+    display: inline-block;
+    width: 1rem;
+    text-align: right;    
 }
 
 
-a.link-menu {
-   font-size: 1.5rem;
-   color: white;
-   opacity: 0.75;
-   padding: 0 0.3rem;
-}
-
-a.link-menu:hover  {
-   opacity: 1;
-}
-
-
-
-input[type="text"] {
-    margin: 2px 0;
-    padding: 2px;
-    font-size: 1.2rem;
-}
-
-div.popout button {
-    margin-top: 4px;
-    display:block;
-    width:100%;
-}
-
-div.popout label {
-    color: #999;
-}

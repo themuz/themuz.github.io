@@ -39,7 +39,7 @@
 
 <div class="page-header">
     <h1>
-        <a class="link-menu" vm-onclick="app.onClickOpenPopoutMenu" style="float:left">&equiv;</a>
+        <a class="menuicon" vm-onclick="app.onClickOpenPopoutMenu" style="float:left">&equiv;</a>
         <span class="score">
             <span vm-text='this.getScore()'></span>
             <small>for</small>
@@ -62,7 +62,7 @@
             <tbody>
 
             <tr class="batter" vm-with="this.getPartner1()" vm-selected="(vm.ball && this.id==vm.ball.batterId)">
-                <td><label  class="fixed">Batter:</label></td>
+                <td><label class="fixed">Batter:</label></td>
                 <td>
                     <select class="partner1"
                             vm-selected="(vm.ball && this.id==vm.ball.batterId)"
@@ -106,13 +106,13 @@
             <tr>
                 <td><label class="fixed">Nav:</label></td>
                 <td colspan="5">
-                    <button vm-onclick="this.onClickOverPrev" title="Prev Over">&lt;&lt;</button>
-                    <button vm-onclick="this.onClickBallPrev" title="Prev Ball">&lt;</button>
+                    <button vm-onclick="this.onClickOverPrev" title="Prev Over">&lt;&lt;
+                    </button><button vm-onclick="this.onClickBallPrev" title="Prev Ball">&lt;
                     <!-- button vm-onclick="this.onClickBallInsert" title="Insert Ball">&plus;</button -->
-                    <button vm-onclick="vm.onClickBallDelete" title="Delete Ball">&#9249;</button>
-                    <button vm-onclick="this.onClickBallNext"  title="Next/New Ball">&gt;</button>
-                    <button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;</button>
-                    <button vm-onclick="REBUILD">[R]</button>
+                    </button><button vm-onclick="vm.onClickBallDelete" title="Delete Ball">&#9249;
+                    </button><button vm-onclick="this.onClickBallNext"  title="Next/New Ball">&gt;
+                    </button><button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;
+                    </button><button vm-onclick="REBUILD">[R]</button>
                 </td>
             </tr>
             </tbody>
@@ -123,13 +123,13 @@
     <legend vm-text="this.ball ? ball.getName() : 'Ball # End of over' "></legend>
     <div vm-with="this.ball" >
         <span vm-onclick="onClickWas">
-            <button class="was runs" value="-" vm-selected="this.was=='-'" title="Runs">Runs</button>
-            <button value="b" class="was" vm-selected="this.was=='b'" title="Bye">&bigtriangleup;</button>
-            <button value="l" class="was" vm-selected="this.was=='l'" title="Leg bye">&bigtriangledown;</button>
-            <button value="w" class="was" vm-selected="this.was=='w'" title="Wide">&plus;</button>
-            <button value="n" class="was" vm-selected="this.was=='n'" title="No Ball">&#x298;</button>
-            <button value="N" class="was" vm-selected="this.was=='N'" title="No Ball+Runs Off Bat">&#x2461;</button> +
-            <button value="w" class="was" vm-selected="this.dismissal=='w'" vm-onclick="onClickDismissal">D</button>
+            <button value="-" vm-selected="this.was=='-'" title="Runs">&nbsp;Runs&nbsp;</button>
+            <button value="b" vm-selected="this.was=='b'" title="Bye">&bigtriangleup;</button>
+            <button value="l" vm-selected="this.was=='l'" title="Leg bye">&bigtriangledown;</button>
+            <button value="w" vm-selected="this.was=='w'" title="Wide">&plus;</button>
+            <button value="n" vm-selected="this.was=='n'" title="No Ball">&#x298;</button>
+            <button value="N" vm-selected="this.was=='N'" title="No Ball+Runs Off Bat">&#x2461;</button> +
+            <button value="w" vm-selected="this.dismissal=='w'" vm-onclick="onClickDismissal">D</button>
         </span><br/>
         <fieldset id="dismissal" vm-display="this.dismissal=='w'">
             <legend>Dismissal</legend>
@@ -169,21 +169,20 @@
         </span>
     </div>
     <div vm-display="!this.ball">
-        <h2><button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;</button> to continue.</h2>
+        <h2 class="endover"><button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;</button> to continue.</h2>
     </div>
 </fieldset>
 
-<div id="extras">
-    <fieldset id="fielding_extras" class="extras">
-        <legend>Fielding Extras</legend>
-        <label>Bye: </label><b vm-text='this.nBye'></b>
-        <label>L-Bye: </label> <b vm-text='this.nLbye'></b>
-    </fieldset>
-    <fieldset id="bowling_extras" class="extras right">
-        <legend>Bowling Extras</legend>
-        <label>No-Ball: </label><b vm-text='this.nNoball'></b>
-        <label>Wide: </label><b vm-text='this.nWides'></b>
-    </fieldset>
+<div>
+<fieldset id="extras" class="extras">
+    <legend>Extras Fielding ... Bowling</legend>
+    <label>Bye: </label><b vm-text='this.nBye'></b>
+    <label>L-Bye: </label> <b vm-text='this.nLbye'></b>
+    <span class="right">
+    <label>No-Ball: </label><b vm-text='this.nNoball'></b>
+    <label>Wide: </label><b vm-text='this.nWides'></b>
+    </span>
+</fieldset>
 </div>
 
 <fieldset id="bowlers" >
@@ -191,8 +190,8 @@
     <table width="100%">
         <thead>
         <tr>
-            <th width="5%"></th>
             <th></th>
+            <th width="80%"></th>
             <!-- http://en.wikipedia.org/wiki/Cricket_statistics#Bowling_statistics -->
             <!--th class="right" title="No balls (Nb): The number of no balls bowled.">Nb</th-->
             <!--th class="right" title="Wides (Wd): The number of wides bowled">Wd</th-->
@@ -229,8 +228,8 @@
     <table width="100%">
         <thead>
         <tr>
-            <th width="5%">Batters</th>
-            <th>Overs</th>
+            <th></th>
+            <th width="80%"></th>
             <!-- http://en.wikipedia.org/wiki/Cricket_statistics#Bowling_statistics -->
             <th class="right"
                 title="Balls faced (BF): The total number of balls received, including no balls but not including wides">
@@ -247,8 +246,7 @@
         </thead>
         <tbody>
         <tr vm-each="batters">
-            <td><span vm-text="(vm._parentHack=this).name" vm-selected="this.id==vm.ball.batterId"></span>
-            </td>
+            <td><span vm-text="(vm._parentHack=this).name" vm-selected="this.id==vm.ball.batterId"></span> </td>
             <td>
                 <span class="markup" vm-each="overs"
                       vm-selected="this===vm.over"
@@ -289,7 +287,8 @@
     </h1>
     <br />
     <label for="app_homeName">Batting Team</label><br />
-    <input type="text" id="app_homeName" size="20" vm-value="this.properties.homeName" autocomplete="off"/><br />
+    <input type="text" id="app_homeName" size="20" vm-value="this.properties.homeName" autocomplete="off"/>
+    <br />
     <br />
     vs<br />
     <br />
@@ -320,8 +319,10 @@
         <a href="#" class="icon tick" vm-onclick="this.onClickSaveBatters" style="float:right">&#x2714;</a>
     </h1>
     <div vm-each="this.batters">
-        <label vm-text="'Batter ' + String(index+1)">Batter X</label>
+        <!--label vm-text="'Batter ' + String(index+1)">Batter X</label-->
         <input vm-value="this.name" type="text" size="20" autocomplete="off" />
+        <a class="move" href="#" data-dirn="-1" vm-onclick="vm.onClickBatterMove">&#8679;</a>
+        <a class="move"  href="#" data-dirn="1" vm-onclick="vm.onClickBatterMove">&#8681;</a>
     </div>
 </div>
 
@@ -331,8 +332,10 @@
         <a href="#" class="icon tick" vm-onclick="this.onClickSaveBowlers" style="float:right">&#x2714;</a>
     </h1>
     <div vm-each="this.bowlers">
-        <label vm-text="'Bowler ' + String(index+1)">Bowler X</label>
+        <!--label vm-text="'Bowler ' + String(index+1)">Bowler X</label-->
         <input vm-value="this.name" type="text" size="20" autocomplete="off" />
+        <a class="move" href="#" data-dirn="-1" vm-onclick="vm.onClickBowlerMove">&#8679;</a>
+        <a class="move"  href="#" data-dirn="1" vm-onclick="vm.onClickBowlerMove">&#8681;</a>
     </div>
 </div>
 
@@ -343,7 +346,7 @@
     <div style="text-align:center">
 
     <h3>Cricket Scoring</h3>
-    <h4>Version: 0.3 (2014-11-22)</h4>
+    <h4>Version: 0.5 (2014-11-23)</h4>
 
     By: Murray Speight<br />
     <br />

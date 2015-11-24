@@ -1400,13 +1400,13 @@ app.onClickCloneInnings = function(ev) {
     len=fromInnings.batters.length;
     if ( this.bowlers.length < len ) len = this.bowlers.length;
     for (i=0;i<len;i++) {
-        this.bowlers[i].name = fromInnings.batters[i].name.replace(/batter/i,'Bowler');
+        this.bowlers[i].name = fromInnings.batters[len-1-i].name.replace(/batter/i,'Bowler');
     }
 
     len=fromInnings.bowlers.length;
     if ( this.batters.length < len ) len = this.batters.length;
     for (i=0;i<len;i++) {
-        this.batters[i].name = fromInnings.bowlers[i].name.replace(/Bowler/i,'Batter');
+        this.batters[i].name = fromInnings.bowlers[len-1-i].name.replace(/Bowler/i,'Batter');
     }
 
     this.render();
@@ -1462,6 +1462,23 @@ app.onClickSaveBatters = function(ev) {
     app.render();
 };
 
+
+app.onClickBatterMove = function(ev) {
+    var i=vmrLite.closestIndex(ev.target);
+    var dirn=parseInt(ev.target.getAttribute('data-dirn'));
+
+    if ( i >= 0 )  {
+        var j=i+dirn;
+        if ( j >= this.batters.length ) j = 0; // Move-down to the top
+        if ( j < 0 ) j = this.batters.length-1; // Move-up to the borrom
+        var v = this.batters[j];
+        this.batters[j]=this.batters[i];
+        this.batters[i]=v;
+    }
+    this.render();
+    ev.preventDefault(); ev.stopPropagation();  
+};
+
 app.onClickPopoutEditBowlers = function(ev) {
     this.onClickClosePopouts(ev);
     var e=$eid('popout_editBowlers');
@@ -1476,6 +1493,24 @@ app.onClickSaveBowlers = function(ev) {
     e.style.display = 'none';
     app.render();
 };
+
+app.onClickBowlerMove = function(ev) {
+    var i=vmrLite.closestIndex(ev.target);
+    var dirn=parseInt(ev.target.getAttribute('data-dirn'));
+
+    if ( i >= 0 )  {
+        var j=i+dirn;
+        if ( j >= this.bowlers.length ) j = 0; // Move-down to the top
+        if ( j < 0 ) j = this.bowlers.length-1; // Move-up to the borrom
+        var v = this.bowlers[j];
+        this.bowlers[j]=this.bowlers[i];
+        this.bowlers[i]=v;
+    }
+    this.render();
+    ev.preventDefault(); ev.stopPropagation();  
+};
+
+
 
 app.onClickPopoutAbout = function(ev) {
     this.onClickClosePopouts(ev);
