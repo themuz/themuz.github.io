@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
-<title>requireLite2</title>
-<script src="../../lib/requireLite.js" type="text/javascript"></script>
+<title>Example partial2</title>
+<script src="../../requireLite.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -19,7 +19,7 @@
 <script language="JavaScript" type="text/JavaScript">
     var ShowMessage=requireLite('ShowMessage');
     var showVM=new ShowMessage();
-    showVM.show('container1');
+    showVM.open('container1');
 
     function showThisMessage_EVENT(theMessage) {
         var ev = document.createEvent('CustomEvent');

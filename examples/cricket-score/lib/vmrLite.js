@@ -293,7 +293,7 @@ vmrLite.evalWith = function (expr, withObj, viewModelObj, index) {
     try {
         return fn.call(withObj, viewModelObj, index);
     } catch (ex) {
-        // console.error(' vmrLite.evalWith( "' + expr + '") ' + ex.message );
+        console.error(' vmrLite.evalWith( "' + expr + '") ' + ex.message );
         // HACK create object
         withObj[expr] = null;
         return null; // '(exception)'

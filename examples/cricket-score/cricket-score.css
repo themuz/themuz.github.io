@@ -1,11 +1,12 @@
 
 html {
- font-size: 11pt;     
-
+    font-size: 11pt;
 }
+
+
 body {
-    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
-    Zbackground-color: #ececec;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;;
+
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
@@ -14,12 +15,35 @@ div#body {
     vertical-align: top;
 }
 
-@media screen and (max-device-width: 480px) and (orientation: portrait) {
-  body {
-    Zbackground-color: pink;
-    width: 100vw;    
-  }
+
+div.w50 {
+  width: 50%;
+  vertical-align: top;
+  display: inline-block;
 }
+
+
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
+    body {
+        width: 100vw;    
+    }
+    div.w50 {
+      width: 100%;
+      display: block !important;
+    }    
+}
+
+/*
+ltBlue: 5AC8FA; 
+Yellow: FFCC00;
+Orange: FF9500;
+Lollypop: FF2D55
+DarkBlue: 007AFF;
+Green: 4CD964;
+DarkRed: FF3B30;
+Gray: 8E8E93;
+
+*/
 
 /* Get rid of ugly grey tap highlight */
 * {
@@ -100,13 +124,18 @@ th.small, td.small {
 }
 
 
+
 fieldset {
     padding: 0.35rem;
-    display: inline-block;
-    width: 100%;
-    max-width: 24rem;
+    Zdisplay: inline-block;
+    Zwidth: 49%;
+    ZZZmax-width: 24rem;
     vertical-align: top;    
     box-sizing: border-box; 
+}
+
+fieldset.col2 {
+    width: 98%;    
 }
 
 button {
@@ -120,13 +149,16 @@ button.small {
     font-size: 0.7rem;
     min-width: 0.2rem;
 }
+button.small.over {
+    min-width: 1.8rem;
+}
 
 button.wide {
     min-width: 2.9rem;
 }
 
 button.selected {
-    background-color: pink;
+    background-color: #FFC3CE;
 }
 
 
@@ -142,7 +174,7 @@ label.fixed {
 /* page header */
 
 div.page-header {
-    background-color: #3366FF; 
+    background-color: #333333; 
 }
 
 div.page-header a.menuicon {
@@ -169,27 +201,27 @@ span.score {
 /* fieldset#over */
 
 button.partner1 {
-  background-color: #FFFFdd;
+  background-color: #DAF0FA;
 }
 select.partner1 {
-  background-color: #FFFFdd;
+  background-color: #DAF0FA;
 }
 button.partner1.selected {
-  background-color: #FFFF00;    
+  background-color: #5AC8FA;    
 }
 
 button.partner2 {
-  background-color: #eeFFFF;
+  background-color: #FFF6D2;
 }
 select.partner2 {
-  background-color: #eeFFFF;    
+  background-color: #FFF6D2;    
 }
 button.partner2.selected {
-    background-color: #00FFFF;    
+    background-color: #F9D659;    
 }
 
 fieldset#over tr.batter.selected td {
-    background-color: pink;
+    background-color: #FFC3CE;
 }
 
 fieldset#over button {
@@ -199,7 +231,7 @@ fieldset#over button {
 /* fieldset#ball */
 
 fieldset#ball h2.endover {
-    background-color: pink;
+    background-color: #FFC3CE;
     margin: 0.2rem;
     border-radius: 6px;
     padding: 0.6rem;
@@ -236,7 +268,7 @@ span.markup {
 }
 
 span.selected {
-    background-color: yellow;
+    background-color: #FFC3CE;
 }
 
 
@@ -274,7 +306,7 @@ div.popout a.icon:hover {
     color: black;
 }
 div.popout h1 {
-    background-color: #6699FF;
+    background-color: #FF2D55;
 }
 
 div.popout button {
@@ -294,13 +326,13 @@ div.popout ul {
     margin: 0;
     text-align: left;
 }
-
    
 div.popout li span {    
     color: #B2B2B2;    
     font-size: 0.9rem;
     padding: 0 1rem;    
 }
+
 div.popout li a {
     color: #757575;
     font-weight: bold;
@@ -315,14 +347,11 @@ div.popout li a:hover {
 
 }
 
-
-
 div.popout input[type="text"] {
     margin: 2px 0;
     padding: 2px;
     font-size: 1.2rem;
 }
-
 
 div.popout a.move {
     font-size: 1.2rem;
@@ -331,7 +360,6 @@ div.popout a.move {
     min-width: 1.3rem;
     border-radius: 6px;
 }
-
 
 div.trigram {
     content: "";
@@ -344,11 +372,6 @@ div.trigram {
     -webkit-box-shadow: 1px 10px 1px 1px #69737d,1px 16px 1px 1px #69737d,1px 22px 1px 1px #69737d;
     box-shadow: 0 10px 0 1px #69737d,0 16px 0 1px #69737d,0 22px 0 1px #69737d;
 } 
-
-
-
-
-
 
 /* unkonwn */
 

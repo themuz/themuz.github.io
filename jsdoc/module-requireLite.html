@@ -23,25 +23,27 @@
 
 
 
+
 <section>
 
 <header>
-    <h2>
-    requireLite
-    </h2>
+    
+        
+            
+        
     
 </header>
 
 <article>
     <div class="container-overview">
     
-
-    
         
-            <div class="description"><h2>Client (Browser) Module Require Lite Loader (Version 0.3)</h2><p>Browser/client emulation of nodejs's syncronous module loader (require) library.</p>
+            <div class="description"><h3>Client (Browser/js) Implementation of require/CommonJS loader</h3><p>Browser/client emulation of CommonJS/node-js's syncronous module loader (require) library.</p>
 <p>With a Lite KISS (Keep It Simple Stupid) approach</p>
-<p>See nodejs's module loader for background information. (http://nodejs.org/api/modules.html#reqModules_the_reqModule_object)</p>
-<h3>Supports js,css,html and json loadng.</h3><h3>Features :-</h3><ul>
+<p>See nodejs's module loader for background information. (https://nodejs.org/docs/latest/api/modules.html#modules_the_module_object)</p>
+<h4>Supports js,css,html and json loadng.</h4><h4>Documentation :-</h4><p>See this README.md OR jsdoc on-line here <a href="http://themuz.github.io/jsdoc/module-requireLite.html">jsdoc requireLite!</a>.</p>
+<h4>Samples :-</h4><p>And samples basic and the standard &quot;todo&quot; app are here. <a href="http://themuz.github.io/">themuz GitHub io</a>.</p>
+<h4>Features :-</h4><ul>
 <li><em>cache</em> - Modules are cached after the first time they are loaded</li>
 <li><em>sync</em> - synchronous (i.e wait) by default like nodejs, Make code/dependancies simple/managable.</li>
 <li><em>async</em> - Async with callback, if you must. </li>
@@ -51,36 +53,38 @@
 <li><em>encapsulated</em> - js is encapsulated in the module pattern, no namespace/global pollution. i.e. Variables local to the module will be private</li>
 <li><em>no dependancies</em> </li>
 </ul>
-<h3>Other file types :=</h3><ul>
+<h4>Other file types :=</h4><ul>
 <li><em>json support</em> - If the url extension is '.json' json will be loaded, and parsed (JSON.parse) and object returned.</li>
 <li><em>css support</em> - If the url extension is '.css', css will be automatically loaded as a window.document.head.link and link's DOM-Element returned. </li>
-<li><em>html support</em> - If the url extension is '.html' json will be loaded into a div and div's html-Element returned. </li>
+<li><em>html support</em> - If the url extension is '.html' the html will be loaded into a div and div's html-Element returned. </li>
 </ul>
-<h3>Usage</h3><pre class="prettyprint source"><code>var loadedObject =requireLite(url,[callback]);</code></pre><p>loadedObject is whatever is returned by the js, by assigning to module.exports (see below)</p>
-<h3>JS Modules (.js)</h3><p>In each js module the &quot;module&quot; free variable is a reference to the object representing the current module.</p>
-<p>The module variable has the following attributes :-</p>
+<h4>Usage</h4><pre class="prettyprint source"><code>var loadedObject = require(url,[callback]);</code></pre><p>loadedObject is whatever is returned by the js, by assigning to module.exports (see below)</p>
+<h4>JS Modules (.js)</h4><p>In each js module the &quot;module&quot; free variable is a reference to the object representing the current module.</p>
+<p>The <em>module</em> variable has the following attributes :-</p>
 <ul>
-<li>exports - The object/function being/to-be exported. Assign to module.exports to return your loadedObject. (initalized to {})</li>
-<li>callbacks - Array of pending callback function (to call when js loaded, used in async mode)</li>
-<li>__id - A incrementing id assigned to the module</li>
-<li>__filename - The url as passed to requireLite (e.g. /js/module/Circle.js)</li>
-<li>__dirname - The folder path for the url, without a trailling &quot;/&quot; ( e.g. /js/module OR . ) </li>
+<li>exports - Object - The object/function being/to-be exported. Assign to module.exports to return your loadedObject. (initalized to {})</li>
+<li>id - String - The identifier assigned to the module</li>
+<li>filename - String - The pathname/url to the module. (e.g. /js/modules/Circle.js)</li>
+<li>loaded - Boolean - Whether or not the module is done loading, or is in the process of loading</li>
 </ul>
-<p>In addition the &quot;exports&quot; free variable is also available. This is initalized to {}. 
-If you use the &quot;exports&quot; variable, only defined new properties/methods. Dont assign to it, as will be lost. If you wish to return
+<p>In addition the &quot;exports&quot; free variable is also available, corresponds to module.exports and initialized to {}. 
+If you use the &quot;exports&quot; variable, only defined new properties/methods. 
+Don't assign to it, as will be lost. If you wish to return
 just an object assign to &quot;module.exports&quot; instead.</p>
-<p>Dirname is usefull if you wish to grab other js/html associated with the file loading. 
- e.g div=requireLite('./myspecial-div.html')</p>
-<h3>Isnt sync slow, with lots of http requests.</h3><p>NO, Not if  all modules pre are loaded (as we should do in production mode for performance)
+<h4>Deferred loading.</h4><p>If you wich to defer loading dependent modules to run-time (vs load-time) ensure you save/use the 
+requireLite.cwd (Current working directory) property, since the cwd may differ at run-time. 
+Use this variable when loading modules at run-time.</p>
+<p>e.g</p>
+<pre class="prettyprint source"><code>function MyModule() { etc ... }    
+
+MyModule.cwd = require.cwd || ''; // This allows js compatability with node-js or browser 
+
+MyModule.doitlater = function() {
+    defered_module_loaded=require(MyModule.cwd + './deferred_module.js')
+}</code></pre><h4>Isnt sync slow, with lots of http requests.</h4><p>NO, Not if  all modules are pre-loaded (as we should do in production mode for performance)
 The require is immediate, why code for complex dependancies/async code when not needed.</p>
 <p>In fact if we can pre load the modules FASTER, i.e. in parallel (subject to dependancies)</p>
 <p>This pre-loading is my next project, See below the TODO list.</p>
-<p>TODO:-</p>
-<ul>
-<li>Ability to place the app in dev mode, build up the modules/depencancies by running the application. </li>
-<li>Export module and dependanceis as a config/loader object.</li>
-<li>Load modules using dependancie config, in parallel (with dependancies)</li>
-</ul>
 <h4>Example Module (circle.js)</h4><pre class="prettyprint source"><code>var PI = Math.PI;
 var Circle={}; 
 
@@ -94,19 +98,43 @@ Circle.circumference = function (r) {
 
 // we could of use the free var &quot;exports&quot; instead of Circle in this example.
 // in which case the below statement, is not required (i.e exports === module.exports)
-module.exports = Circle; </code></pre><h4>Example Usage  (async)</h4><pre class="prettyprint source"><code>var  Circle=requireLite('./lib/circle.js');
-alert('The are of a 1&quot; circle is ' + Circle.area(1) + '&quot;')</code></pre><h4>Example Usage  (async)</h4><pre class="prettyprint source"><code>requireLite('./lib/circle.js', function(circle) {
+module.exports = Circle; </code></pre><h4>Example Usage  (async)</h4><pre class="prettyprint source"><code>var  Circle=require('./lib/circle.js');
+alert('The are of a 1&quot; circle is ' + Circle.area(1) + '&quot;')</code></pre><h4>Example Usage  (async)</h4><pre class="prettyprint source"><code>require('./lib/circle.js', function(circle) {
   // Do stuff with the &quot;circle&quot;, now its loaded   
-});</code></pre><h4>TODO:-</h4><ul>
+});</code></pre><h4>Change log</h4><pre class="prettyprint source"><code>2016-02-04 rename module.__filename -> filename, __id -> id for consistency with CommonJS/node-js
+2016-02-04 removed module.__dirname as in-consistent with CommonJS (use require.cwd as a replacement)</code></pre><h4>TODO:-</h4><ul>
+<li>Ability to place the app in dev mode, build up the modules/depencancies by running the application. </li>
+<li>Tool to wrap all modules, with dependancies into a single unit for production use.</li>
 <li>Handle cyclic references e.g. A requires B that requires A</li>
 <li>if Async scan the js code for require('module.js' .. and load that async 1st.</li>
-<li>DONE: Add requireLite.ROOT to define root folder. default being &quot;&quot;</li>
-<li>Add name-space urls. e.g. mylib:module.js ==&gt; ROOT + '/js/applib/module.js'</li>
 </ul></div>
         
 
         
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <dl class="details">
+
+    
+
+    
+
+    
+
     
 
     
@@ -140,11 +168,23 @@ alert('The are of a 1&quot; circle is ' + Circle.area(1) + '&quot;')</code></pre
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     
     </div>
-
-    
 
     
 
@@ -159,35 +199,41 @@ alert('The are of a 1&quot; circle is ' + Circle.area(1) + '&quot;')</code></pre
     
         <h3 class="subsection-title">Members</h3>
 
-        <dl>
+        
             
-<dt>
-    <h4 class="name" id="config"><span class="type-signature">(static) </span>config<span class="type-signature"> :Object</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>RequireLite Configurations options.</p>
-<p>Currently no config options.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Object</span>
+<h4 class="name" id=".requireLite.cwd"><span class="type-signature">(static) </span>requireLite.cwd<span class="type-signature"> :string</span></h4>
 
 
-            </li>
-        </ul>
-    
 
-    
+
+<div class="description">
+    <p>Current Working Directory WITH a trailing &quot;/&quot;</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
 <dl class="details">
+
+    
+
+    
+
+    
+
     
 
     
@@ -207,14 +253,14 @@ alert('The are of a 1&quot; circle is ' + Circle.area(1) + '&quot;')</code></pre
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>'{}'</li>
+            <li>'./'</li>
         </ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line261">line 261</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line265">line 265</a>
     </li></ul></dd>
     
 
@@ -226,40 +272,46 @@ alert('The are of a 1&quot; circle is ' + Circle.area(1) + '&quot;')</code></pre
 </dl>
 
 
-    
 
-    
-</dd>
+
+
 
         
             
-<dt>
-    <h4 class="name" id="ROOT"><span class="type-signature">(static) </span>ROOT<span class="type-signature"> :String</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The &quot;root&quot; for calls with a absolute path (i.e. url starts with &quot;/&quot; )
-if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">String</span>
+<h4 class="name" id=".requireLite.inBrowser"><span class="type-signature">(static) </span>requireLite.inBrowser<span class="type-signature"> :Boolean</span></h4>
 
 
-            </li>
-        </ul>
-    
 
-    
+
+<div class="description">
+    <p>Always true since running in the brower. 
+Will be undefined if running under node-js require.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
 <dl class="details">
+
+    
+
+    
+
+    
+
     
 
     
@@ -279,14 +331,14 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>''</li>
+            <li>true</li>
         </ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line227">line 227</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line312">line 312</a>
     </li></ul></dd>
     
 
@@ -298,39 +350,45 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
 </dl>
 
 
-    
 
-    
-</dd>
+
+
 
         
             
-<dt>
-    <h4 class="name" id="SEQ"><span class="type-signature">(static) </span>SEQ<span class="type-signature"> :Integer</span></h4>
+<h4 class="name" id=".requireLite.SEQ"><span class="type-signature">(protected, static) </span>requireLite.SEQ<span class="type-signature"> :Integer</span></h4>
 
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Sequence generator for requireLite.</p>
-    </div>
-    
 
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
+
+
+<div class="description">
+    <p>Sequence generator for requireLite.</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
 <span class="param-type">Integer</span>
 
 
-            </li>
-        </ul>
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
     
 
     
-<dl class="details">
+
+    
+
     
 
     
@@ -357,7 +415,7 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line246">line 246</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line295">line 295</a>
     </li></ul></dd>
     
 
@@ -369,35 +427,114 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
 </dl>
 
 
+
+
+
+
+        
+            
+<h4 class="name" id=".requireLite.version"><span class="type-signature">(static) </span>requireLite.version<span class="type-signature"> :String</span></h4>
+
+
+
+
+<div class="description">
+    <p>Version of the library</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">String</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
     
 
     
-</dd>
 
-        </dl>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>"0.3"</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line252">line 252</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
         <h3 class="subsection-title">Methods</h3>
 
-        <dl>
-            
-<dt>
-    <h4 class="name" id="requireLite"><span class="type-signature">(static) </span>requireLite<span class="signature">(url, extn, callback)</span><span class="type-signature"> &rarr; {null|Object}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-        <h5>Parameters:</h5>
         
+            
+
+    
+
+    <h4 class="name" id=".requireLite"><span class="type-signature">(static) </span>requireLite<span class="signature">(url, callback)</span><span class="type-signature"> &rarr; {null|Object}</span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
 
 <table class="params">
     <thead>
@@ -437,30 +574,7 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
 
             
 
-            <td class="description last"><p>url to load.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>extn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>OPTIONAL override extension to use, use when loading .js file, so can load the corresponding .html/.js</p></td>
+            <td class="description last"><p>url to load. Paths should be relative to current module.</p></td>
         </tr>
 
     
@@ -489,10 +603,20 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
     
     </tbody>
 </table>
+
+
+
+
+
+
+<dl class="details">
+
     
 
     
-<dl class="details">
+
+    
+
     
 
     
@@ -514,7 +638,7 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line115">line 115</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line136">line 136</a>
     </li></ul></dd>
     
 
@@ -526,20 +650,20 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
     <p>null if async, value of module.exports if sync.</p>
 </div>
@@ -561,12 +685,296 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
     </dd>
 </dl>
 
+    
+
+
+
         
+            
 
     
-</dd>
 
-        </dl>
+    <h4 class="name" id=".requireLite.loadScript"><span class="type-signature">(protected, static) </span>requireLite.loadScript<span class="signature">(module)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Load the module (initiate a XMLHttpRequest)</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>module</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Module to load</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line418">line 418</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".requireLite.xhrComplete"><span class="type-signature">(protected, static) </span>requireLite.xhrComplete<span class="signature">(module, xhr)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Process completed xhr request</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>module</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Module loading</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>xhr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>XML Http request</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line330">line 330</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
@@ -582,13 +990,13 @@ if url starts with &quot;/&quot;, ROOT is prepended to the url.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-requireLite.html">requireLite</a></li><li><a href="module-vmrLite.html">vmrLite</a></li></ul><h3>Classes</h3><ul><li><a href="MessageDlgVM.html">MessageDlgVM</a></li><li><a href="ShowModalVM.html">ShowModalVM</a></li><li><a href="StackedUIVM.html">StackedUIVM</a></li><li><a href="TabbedUIVM.html">TabbedUIVM</a></li><li><a href="ViewModelBase.html">ViewModelBase</a></li><li><a href="ViewModelOuter.html">ViewModelOuter</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-requireLite.html">requireLite</a></li><li><a href="module-vmrLite.html">vmrLite</a></li></ul><h3>Classes</h3><ul><li><a href="VMBase.html">VMBase</a></li></ul>
 </nav>
 
-<br clear="both">
+<br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Sat Oct 11 2014 21:18:18 GMT+1300 (New Zealand Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Feb 05 2016 19:20:10 GMT+1300 (New Zealand Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

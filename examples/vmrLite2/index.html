@@ -3,8 +3,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>vmrLite2</title>
-<script src="../../lib/vmrLite.js" type="text/javascript"></script>
+<title>Example 2</title>
+<script src="../../vmrLite.js" type="text/javascript"></script>
 <style type="text/css" media="all">
 
 body {
@@ -51,7 +51,7 @@ function TicketsViewModel() {
     // Add sync/render for convenience
 	this.sync = function() { vmrLite.sync( this.container, this ); };
     this.render = function() { vmrLite.render( this.container, this ); };
-    this.show = function(container) { 
+    this.open = function(container) { 
         this.container = container;
         vmrLite.render( this.container, this );
     };
@@ -92,7 +92,7 @@ function TicketsViewModel() {
 }
 
 function onBodyLoad() {
-	(new TicketsViewModel()).show(document.getElementById('ticketsView'));
+	(new TicketsViewModel()).open(document.getElementById('ticketsView'));
 }
 
 </script>
