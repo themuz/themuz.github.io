@@ -823,7 +823,7 @@ app.setBattersBasedOnLastBall = function(lastBall,retvalBallsChanged) {
     orig_nonStrikerCode = this.currBall.nonStrikerCode;
 
     // Work out the new batter. If changed
-    outBatterCode = '';
+    // outBatterCode = '';
     newbatterCode = '';
     if (( this.currBall.batterCode != lastBall.batterCode) &&
         ( this.currBall.batterCode != lastBall.nonStrikerCode)) {
