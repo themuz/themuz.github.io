@@ -32,7 +32,7 @@
 
 ### Client (Browser/js) Implementation of require/CommonJS loader 
 
-Browser/client emulation of CommonJS/node-js's syncronous module loader (require) library.
+Browser/client emulation of CommonJS/node-js's synchronous module loader (require) library.
 
 With a Lite KISS (Keep It Simple Stupid) approach
 
@@ -53,10 +53,9 @@ And samples basic and the standard "todo" app are here. [themuz GitHub io](http:
 #### Features :-
 - *cache* - Modules are cached after the first time they are loaded
 - *sync* - synchronous (i.e wait) by default like nodejs, Make code/dependancies simple/managable.
-- *async* - Async with callback, if you must. 
+- *async* - Async with callback, for eager loading.
 - *module* - In each module, the "module" free variable is a reference to the object representing the current module being loaded.
 - *module.exports* - The object assigned to module.exports will be the require of the requireLite call.
-- *not just js* - In addition json/css/html is also supported !!
 - *encapsulated* - js is encapsulated in the module pattern, no namespace/global pollution. i.e. Variables local to the module will be private
 - *no dependancies* 
 
@@ -88,11 +87,16 @@ If you use the "exports" variable, only defined new properties/methods.
 Don't assign to it, as will be lost. If you wish to return
 just an object assign to "module.exports" instead.
 
-#### Deferred loading.
+#### Deferred loading / Cyclic dependencies
 
-If you wich to defer loading dependent modules to run-time (vs load-time) ensure you save/use the 
-requireLite.cwd (Current working directory) property, since the cwd may differ at run-time. 
+If you wish to defer loading dependent modules to run-time (vs load-time) ensure you save/use the 
+requireLite.cwd (Current working directory) property at load time,
+since the cwd may differ at run-time. 
 Use this variable when loading modules at run-time.
+NOTE: cwd INCLUDES the trailing "/"
+
+If you have cyclic dependencies at load time (does not happen often, but can happen)
+e.g. A requires B that requires A. Defer loading of the dependent module to run-time. 
 
 e.g
 
@@ -108,12 +112,12 @@ e.g
 #### Isnt sync slow, with lots of http requests.
 
 NO, Not if  all modules are pre-loaded (as we should do in production mode for performance)
-The require is immediate, why code for complex dependancies/async code when not needed.
+The require is immediate, why code for complex dependences/async code when not needed.
 
-In fact if we can pre load the modules FASTER, i.e. in parallel (subject to dependancies)
+In fact if we can pre load the modules FASTER, i.e. in parallel (subject to dependencies)
 
-This pre-loading is my next project, See below the TODO list.
-
+Pre-loading can be performed by use of the new static method require.asyncLoadStack 
+(see asyncLoadStack, buildLoadStackDetails and buildLoadStackDetails for details)
 
 #### Example Module (circle.js)
 
@@ -144,17 +148,37 @@ This pre-loading is my next project, See below the TODO list.
       // Do stuff with the "circle", now its loaded   
     });
 
+#### Example Bulk Async Preload load
+
+Sample code to load modules at page load.
+
+    &lt;script type="text/javascript">
+
+    window.addEventListener("load",function() {
+        var REQUIRE_LOAD_STACK = [
+            ["./js/logger.js", "./js/curl.js"],
+            ["./model/WatchModel.js", "./model/ConfigModel.js"], 
+            ["./model/WatchList.js", "./js/WatchEditVM.js"],
+            ["./js/WatchListVM.js"], 
+            ["./js/mainUI.js"] ];
+
+        require.asyncLoadStack( REQUIRE_LOAD_STACK, function() {
+            var mainUI=require('js/mainUI');
+            mainUI.main();
+        });
+    });
+
 #### Change log
 
     2016-02-04 rename module.__filename -> filename, __id -> id for consistency with CommonJS/node-js
     2016-02-04 removed module.__dirname as in-consistent with CommonJS (use require.cwd as a replacement)
-
+    2016-05-15 Added showLoadStack to console.log module dependacies/load order
+    2016-05-15 Added asyncLoadStack preload a set of modules for efficiency (see showLoadStack) 
 
 #### TODO:-
-- Ability to place the app in dev mode, build up the modules/depencancies by running the application. 
-- Tool to wrap all modules, with dependancies into a single unit for production use.
-- Handle cyclic references e.g. A requires B that requires A
-- if Async scan the js code for require('module.js' .. and load that async 1st.
+- Ability to place the app in dev mode, build up the modules/depencancies by running the application. DONE (see showLoadStack)
+- Method to load all modules at startup. DONE (see asyncLoadStack) 
+- Handle cyclic references e.g. A requires B that requires A. DONE (see runtime-loading notes below)
 
 @module requireLite
 
@@ -199,13 +223,16 @@ function requireLite(url, callback) {
         url = url.replace(/\/\.\//g,'\/'); // 
         // map "/folder-name/../" => "/"
         url = url.replace(/\/[^\/]+\/\.\.\//g,'\/');
-        // map "/folder-name/../" => "/"
+        // repeat map "/folder-name/../" => "/"
         url = url.replace(/\/[^\/]+\/\.\.\//g,'\/');          
     }
 
     // In Chrome name is CACHE items are null. No it was an issue with no-cache !!
     var module = requireLite.cachedModules[url];
     if (module &amp;&amp; !module.noCache) {
+
+        requireLite.cmodule.requires[url]='cach';
+
         // Cached !!
         if (module.loaded) {
             if (callback) {
@@ -216,6 +243,7 @@ function requireLite(url, callback) {
             // console.log('debug:requireLite: cached ' + url);
             return module.exports;
         }
+        // Not loaded yet.
         if (callback) {
             // console.log('debug:requireLite: still loading. push ' + url);
             // sync-call, but module loading in progress.
@@ -244,13 +272,14 @@ function requireLite(url, callback) {
     module = {
         id: requireLite.SEQ++,
         filename: url,
-        cwd: '.',
         loaded: false,
         callbacks: [],
-        exports: {}
+        exports: {},
+        requires : {} // Hash of required file names
     };
 
 
+    requireLite.cmodule.requires[url]='load';
 
     if (callback) {
         module.callbacks.push(callback);
@@ -294,6 +323,14 @@ Current Working Directory WITH a trailing "/"
 
 requireLite.cwd = './';
 
+requireLite.cmodule = { // Current module loading. 
+        id: -1234,
+        filename: 'root',
+        loaded: true,
+        callbacks: [],
+        exports: {},
+        requires : {} // Hash of required file names
+};    
 /**
 
 List of cached modules.
@@ -307,6 +344,7 @@ List of cached modules.
 
 
 requireLite.cachedModules = {};
+requireLite.cachedModules['root'] = requireLite.cmodule ;
 
 
 /**
@@ -358,7 +396,7 @@ Process completed xhr request
 
 // Script loaded.
 requireLite.xhrComplete = function (module, xhr) {
-    var fn,push_cwd,ctype,split;
+    var fn,push_cwd,push_cmodule,ctype,split;
     if (xhr.status === 200) { //  &amp;&amp; xhr.getResponseHeader('Content-Type') === 'application/x-javascript') {
         // set ctype=html,json,css
         var cExtn='js'; // Assume js
@@ -399,15 +437,16 @@ requireLite.xhrComplete = function (module, xhr) {
             module.exports = window.document.createElement("link");
             module.exports.setAttribute("rel", "stylesheet");
             module.exports.setAttribute("type", "text/css");
-            module.exports.setAttribute("id", module.__id);
+            module.exports.setAttribute("id", module.id);
             module.exports.href = xhr.responseText;  // responseText, has the full URL. 
             window.document.head.appendChild(module.exports);
         } else {
             // Some js to load.
             fn = new Function(['module', 'exports'], xhr.responseText);
 
-            // Set the cwd to allow other modules to be loaded. 
+            // PUSH: Set the cwd to allow other modules to be loaded. 
             push_cwd = requireLite.cwd;
+            push_cmodule = requireLite.cmodule;
 
             // Change requireLite.cwd to folder. 
             split = module.filename.split('/');
@@ -415,9 +454,15 @@ requireLite.xhrComplete = function (module, xhr) {
             requireLite.cwd = split.join('/') ;
             if ( requireLite.cwd.length === 0 ) requireLite.cwd = '.';
             requireLite.cwd += '/'; // WITH trailing slash
+
+            requireLite.cmodule=module;
+
             // console.log('debug:requireLite fn.call cwd='+requireLite.cwd);
             fn.call(this, module, module.exports);
+
+            // POP
             requireLite.cwd = push_cwd;
+            requireLite.cmodule = push_cmodule;
 
         }
         module.loaded = true;
@@ -452,7 +497,7 @@ requireLite.loadScript = function (module) {
 
     async = (module.callbacks.length > 0);
 
-    url = module.filename + '?nocache=' + module.__id;
+    url = module.filename + '?nocache=' + module.id;
     if ((url.charAt(0) === '/') &amp;&amp; (requireLite.ROOT)) 
        url = requireLite.ROOT + url;
 
@@ -476,6 +521,188 @@ requireLite.loadScript = function (module) {
     }
 };
 
+/**
+
+Build the list of modules to load in optional order, 
+So that any requied modules are already loaded.
+
+This is determined by the run-time confguration, of modules loaded.
+
+This also includes information of requires, and 
+
+@function 
+@memberof module:requireLite
+@param module {Object}  Module to load
+@protected
+
+*/
+
+
+requireLite.buildLoadStackDetails = function() {
+	var stack=[],e,starting_stack_length,filename,requiresFilenames;
+	var canAddModuleToStack,module,npass;
+    // Init
+    for ( filename in requireLite.cachedModules ) {
+        requireLite.cachedModules[filename].inStackElem = null;
+    }
+	npass=0;
+	do {
+		starting_stack_length = stack.length;
+	  for ( filename in requireLite.cachedModules ) {
+	  	module=requireLite.cachedModules[filename];
+	  	if ( !module.inStackElem ) {
+		  	canAddModuleToStack = true;
+		  	for ( requiresFilenames  in module.requires ) {
+		  		canAddModuleToStack = canAddModuleToStack &amp;&amp; 
+		  				!!requireLite.cachedModules[requiresFilenames].inStackElem &amp;&amp; 
+		  				  requireLite.cachedModules[requiresFilenames].inStackElem.phase &lt; npass;
+		  	}
+		  	if ( canAddModuleToStack ) {
+		  		module.inStackElem = { filename: filename, 
+			  		 phase: npass,
+    				 requiresFilenames: Object.keys(module.requires),
+	       			 usedbyFilenames: [] };
+		  		stack.push( module.inStackElem );
+		  		// Now can push, Add to usedbyFilenames list so in order of usage.
+			  	for ( requiresFilenames  in module.requires ) {
+			  		requireLite.cachedModules[requiresFilenames].inStackElem.usedbyFilenames.push(filename);
+	  			}
+		  	}
+			} 
+	  }
+	  npass += 1;
+	} while( starting_stack_length != stack.length );
+
+  return stack;
+};
+
+/**
+
+Output to the console, the stack of modules to load.
+This is suitable for use by asyncLoadStack.
+
+Handy when going into production, As modules can be loaded at start-up.
+
+@function 
+@memberof module:requireLite
+@public
+
+*/
+
+requireLite.showLoadStack = function() {
+	var stackDetails = requireLite.buildLoadStackDetails();
+	console.log(JSON.stringify(stackDetails,null,'\t'));
+    var arrayOfSetOfModuleFilenames = [];
+	var elem;
+	var i,currentPhase = (-1);
+
+	for (i=0;i&lt;stackDetails.length;i++) {
+		elem=stackDetails[i];
+		if ( elem.filename.match(/\.html$/) ) continue;
+		if ( elem.filename == 'root' ) continue;
+
+        if ( !arrayOfSetOfModuleFilenames[elem.phase]) 
+            arrayOfSetOfModuleFilenames[elem.phase] = [];
+        arrayOfSetOfModuleFilenames[elem.phase].push(elem.filename);
+
+	}
+    console.log('var REQUIRE_LOAD_STACK = \r\n' + 
+            JSON.stringify(arrayOfSetOfModuleFilenames,null,'\t') + ';\r\n');
+    return arrayOfSetOfModuleFilenames;
+};
+
+/**
+
+Load Array (Set) of modules in parallel, then call callback when all loaded.
+
+Internally used by asyncLoadStack
+
+@function 
+@memberof module:requireLite
+@param setOfModuleFilenames {Array}  Array module-filenames to load
+@param callback {function}  function to call once all modules loaded
+@protected
+
+*/
+
+requireLite.asyncLoadSet = function(setOfModuleFilenames, callback) {
+    var filename,i;
+    if ( setOfModuleFilenames.length === 0 ) {
+        callback('nothing-to-do');
+        return;
+    }    
+    // Clone array setsOfModuleFilenames
+    var modulesLeftToLoad = setOfModuleFilenames.length;
+    var moduleLoadedCallback = function(ignore) {
+        modulesLeftToLoad -= 1;
+        // console.log('asyncLoad: module loaded');
+        if ( modulesLeftToLoad === 0 ) {
+            // console.log('asyncLoad: ALL loaded');
+            callback('done');
+        }
+     };
+
+    for (i=0;i&lt;setOfModuleFilenames.length;i++) {
+         // console.log('asyncLoad: loading ' + setOfModuleFilenames[i]);
+         require(setOfModuleFilenames[i], moduleLoadedCallback );
+    }
+
+};
+
+
+
+/**
+
+Load the module stack at start-up.
+
+These modules as an Array of Sets(an array) of module-filenames/urls.
+
+Each inner Set (an array) of module-filenames/urls is loaded in parallel (with no defined order)
+The loader assumes the module only has dependancies (requires) from prior module sets.
+i.e The fist set of modules is loaded, then the next set.
+
+e.g 
+ [ [base-module-a.js,base-module-b.js,base-module-c.js],
+   [next-module-that-requires-a-base-module.js,another-module-that-requires-a-base-module.js],
+   [newer-module-that-requires-next-module.js]
+
+ Once load is complete call the callback. 
+
+@function 
+@memberof module:requireLite
+@param arrayOfSetOfModuleFilenames {Array}  Array of Array of module-filenames to load
+@param callback {function}  function to call once all modules loaded
+@public
+
+
+ */
+
+requireLite.asyncLoadStack = function(arrayOfSetOfModuleFilenames, callback) {
+    var filename,i;
+    if ( arrayOfSetOfModuleFilenames.length === 0 ) {
+        callback('nothing-to-do');
+        return;
+    }
+
+    // Clone array setsOfModuleFilenames
+    var setsToLoad = arrayOfSetOfModuleFilenames.splice(0);
+    var setLoadedCallback = function(ignore) {
+        // console.log('asyncLoad: set loaded');
+        if ( setsToLoad.length === 0 ) {
+            // console.log('asyncLoad: ALL sets loaded');
+            callback('done');
+            return;
+        }
+        // Load next set
+        // console.log('asyncLoad: loading NEXT set');
+        requireLite.asyncLoadSet(setsToLoad.shift(),setLoadedCallback);
+     };
+     // console.log('asyncLoad: loading first set');
+     requireLite.asyncLoadSet(setsToLoad.shift(),setLoadedCallback);
+};
+
+// JSON.stringify(requireLite.loadStack(),null,'\t');
+// JSON.stringify(requireLite.buildLoadStack(),null,'\t');
 
 var require = requireLite;
 
@@ -498,7 +725,7 @@ if (typeof module !== 'undefined') {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Feb 05 2016 19:31:02 GMT+1300 (New Zealand Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon May 16 2016 20:01:25 GMT+1200 (New Zealand Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

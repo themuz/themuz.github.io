@@ -63,6 +63,7 @@ See this README.md OR jsdoc on-line here [jsdoc VMBase!](http://themuz.github.io
 
     SampleVM.prototype = Object.create(VMBase.prototype);
     SampleVM.prototype.constructor = SampleVM;
+    SampleVM.prototype.cwd = (require.cwd || ''); // VMBase requires the cwd, for deferred loading is using requireLite !!
 
     SampleVM.prototype.template = {  // Optional - used to dynamically load the VM partial html.
         div: null,  // div to clone for container.innerHTML
@@ -78,11 +79,12 @@ See this README.md OR jsdoc on-line here [jsdoc VMBase!](http://themuz.github.io
 
 function VMBase(config) {
     if (!(this instanceof VMBase)) { // If invoked as a factory by mistake
-        console.debug('VMBase: not called with new');
+        console.log('VMBase: not called with new');
         return new VMBase(config);
     }
     this._init(config);
 }
+
 
 /**
 
@@ -96,6 +98,8 @@ Version of the library
 
 
 VMBase.version = '0.1';
+VMBase.debug = false;
+
 
 /**
 
@@ -118,8 +122,6 @@ VMBase.prototype.template = {
     uri: null, 
     singleton: false,
     cssUri: null }; 
-
-
 
 VMBase.prototype.cwd = '';
 
@@ -164,7 +166,7 @@ VMBase.prototype._init = function (config) {
     // (Yes this.container may be null, this is ok, events are registered with addEventListeners within open)
     this.eventListeners.push( { elem: this.container, type: 'change', listener: this.onChange.bind(this) } );
 
-    console.log(this.className+'._init',this );
+    if ( VMBase.debug ) console.log(this.className+'._init',this );
 
     return this;
 };
@@ -183,20 +185,20 @@ Open this view (Apply template, and render) in the container specified.
 */
 
 VMBase.prototype._open = function (container) {
-    var nodeList,i;
+    var nodeList,i,childDiv;
 
     if ( this._isopen ) throw new Error(this.className + ' is already open');
 
     if (container) this.container = container;
     if (typeof this.container === 'string') { this.container = document.getElementById(this.container); }
-    if (!this.container)  console.error(this.className+': container is null');
+    if (!this.container)  console.log(this.className+': ERROR: container is null');
     if (this.container.jquery) { this.container = this.container.get(0); } // Make it a DOM Element     
 
     this.container.setAttribute('className', this.className);
     if (!this.container.id) this.container.id = this.id;
 
 
-    // load css from uri. 
+    // load css from uri. If defined and not already loaded. 
     if ( this.template &amp;&amp; this.template.cssUri &amp;&amp; !this.template.link ) {
         this.template.link = require(this.cwd + this.template.cssUri);
     }
@@ -206,16 +208,25 @@ VMBase.prototype._open = function (container) {
     }
 
     // clone template 
+    // 2016-04-03 Updated to clone the div content, not the div itself.
     if ( this.template &amp;&amp; this.template.div ) {    
         vmrLite.empty(this.container); // Empty the container
+        // firstElementChild
         if ( this.template.singleton ) {
-            // Move Element, But keep track of templates parentElement so can put back
-            this.template.parentElement = this.template.div.parentElement;
-            this.template.parentElement.removeChild( this.template.div );
-            this.container.appendChild( this.template.div );        
+            // Move Element
+            childDiv = this.template.div.firstElementChild;
+            while ( childDiv ) {
+                this.template.div.removeChild( childDiv );
+                this.container.appendChild( childDiv );   
+                childDiv = this.template.div.firstElementChild;      
+            }    
         } else {
             // Clone
-            this.container.appendChild( this.template.div.cloneNode(true) );        
+            childDiv = this.template.div.firstElementChild;
+            while ( childDiv ) {
+                this.container.appendChild( childDiv.cloneNode(true) );   
+                childDiv = childDiv.nextElementSibling;      
+            }
         }
     }        
 
@@ -282,7 +293,7 @@ VMBase.prototype.addEventListeners = function () {
     var i,eListener;
     // bind events related to stuff on or outside container !!
     // Initalize other stuff.
-    console.log(this.className + '.addEventListeners', this.container);
+    if ( VMBase.debug ) console.log(this.className + '.addEventListeners', this.container);
 
     // target.addEventListener(type, listener[, useCapture]);
     for (i=0;i&lt;this.eventListeners.length;i++) {
@@ -314,7 +325,7 @@ Calls removeEventListener for each element of eventListeners that is listening.
 
 VMBase.prototype.removeEventListeners = function () {
     var i,eListener,eTarget;    
-    console.log(this.className + '.removeEventListeners', this.container);
+    if ( VMBase.debug ) console.log(this.className + '.removeEventListeners', this.container);
 
     for (i=0;i&lt;this.eventListeners.length;i++) {
         eListener = this.eventListeners[i];
@@ -368,7 +379,7 @@ If immediate feed-back is required use render();
 VMBase.prototype.defer_render = function() {
     if ( !this._renderDeferred ) {
         this._renderDeferred=true;
-        window.setTimeout(this.render.bind(this), 10);
+        window.setTimeout(this.render.bind(this), 100);
     }    
     return this;
 };
@@ -433,10 +444,11 @@ empty the container (if cloned from template)
 */
 
 VMBase.prototype._close = function () {
+    var childDiv;
     // detach events related to stuff on or outside container !!
     // Clear contents etc...
     if ( !this._isopen ) throw new Error(this.className + ' is NOT open');
-    console.log(this.className + '._close',this);
+    if ( VMBase.debug ) console.log(this.className + '._close',this);
 
     this.removeEventListeners();
     // IMPORTANT if not emptying the container.
@@ -452,14 +464,19 @@ VMBase.prototype._close = function () {
     // Clear the contents, if we used a template. So nodes are freeed up.
     if ( this.template.div ) {
         if ( this.template.singleton ) {
-            // Move Element back to original parentElement 
-            this.container.removeChild( this.template.div );
-            this.template.parentElement.appendChild( this.template.div );        
+            // Move Element back to original div 
+            childDiv = this.container.firstElementChild;
+            while ( childDiv ) {
+                this.container.removeChild( childDiv );
+                this.template.div.appendChild( childDiv );   
+                childDiv = this.container.firstElementChild;       
+            }      
         } else {
             // Delete contents
             vmrLite.empty(this.container);    
         }
     }
+    this._isopen = false;
 
 
     return this;
@@ -498,7 +515,7 @@ Simply a wrapper for vmrLite.triggerEvent where the container is this.container.
 */
 
 VMBase.prototype.trigger = function ( etype, detail ) {
-    console.log(this.className + '.trigger '+ etype);
+    if ( VMBase.debug ) console.log(this.className + '.trigger '+ etype);
     vmrLite.triggerEvent( this.container, etype, detail );
     return this;
 };
@@ -516,7 +533,7 @@ base implementation simply calls close();
 */
 
 VMBase.prototype.onClickClose  = function (ev) {
-    console.log(this.className + '.onClickClose');
+    if ( VMBase.debug ) console.log(this.className + '.onClickClose');
     this.close();
     ev.preventDefault(); ev.stopPropagation();
 };
@@ -540,7 +557,7 @@ VMBase.prototype.onChange = function(ev) {
 };
 
 // Export, if loaded as a nodejs style require
-if (typeof module !== 'undefined') {
+if (typeof(module) !== 'undefined') {
     module.exports = VMBase;
 }
 
@@ -565,7 +582,7 @@ if (typeof module !== 'undefined') {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Feb 05 2016 19:31:02 GMT+1300 (New Zealand Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon May 16 2016 20:01:25 GMT+1200 (New Zealand Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
