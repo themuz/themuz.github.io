@@ -38,7 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><h3>Render Object (View Model) within a html element.</h3><p>Render (associate) DOM elements with a JavaScript (view model) object. 
+            <div class="description"><h3>Render Object (View Model) within a html element.</h3><p>Render (associate) DOM elements with a JavaScript (view model) object.
 Rendering is controlled by special attribute tags within the html.</p>
 <p>Similar in principle to knockout, but simpler plus you control when to render/sync.</p>
 <h4>Documentation :-</h4><p>See this README.md OR jsdoc on-line here <a href="http://themuz.github.io/jsdoc/module-vmrLite.html">jsdoc vmrLite!</a>.</p>
@@ -52,13 +52,13 @@ Rendering is controlled by special attribute tags within the html.</p>
 <li>sync input elements back</li>
 <li>supports repeating elements (e.g arrays) (see vm-each) to clone/create dom nodes.</li>
 <li>include in your page. or load as a AMD module (see require.js)</li>
-<li>NO dependencies. </li>
-<li>Add your own DOM extensions. </li>
+<li>NO dependencies.</li>
+<li>Add your own DOM extensions.</li>
 <li>sync/render when you want (NOT when framework thinks you should)</li>
 <li>on-events read as if the old way. eventListeners are handed for you.</li>
 </ul>
 <h4>Available Attributes at each DOM Element.</h4><p>vmrLite uses special attributes prefixed with &quot;vm&quot; (view model) to control dom/js mapping.
-The attributes value represent an expression (typically just a property) of the object to evaluate. </p>
+The attributes value represent an expression (typically just a property) of the object to evaluate.</p>
 <p>Below are the core/common items (vm-tagname) attributes</p>
 <ul>
 <li><strong>text</strong> - Bind to the elements.textContent to the specified object</li>
@@ -73,10 +73,10 @@ The attributes value represent an expression (typically just a property) of the 
 <li><strong>attr</strong>-<em>name</em> - Set the attribute <em>name</em> to result of value-exp</li>
 <li><strong>data</strong>-<em>name</em> - Set the data-<em>name</em> attribute to result of value-exp</li>
 <li><strong>debug</strong> - Dump a debug message, console.log the value-exp result.</li>
-<li><strong>disabled</strong> - Set/Clear the elements disabled property AND css-class, based on truthy of value-exp </li>
-<li><strong>readonly</strong> - Set/Clear the elements readonly property AND css-class, based on truthy of value-exp </li>
-<li><strong>required</strong> - Set/Clear the elements required property AND css-class, based on truthy of value-exp </li>
-<li><strong>selected</strong> - Set/Clear the elements selected property AND css-class, based on truthy of value-exp </li>
+<li><strong>disabled</strong> - Set/Clear the elements disabled property AND css-class, based on truthy of value-exp</li>
+<li><strong>readonly</strong> - Set/Clear the elements readonly property AND css-class, based on truthy of value-exp</li>
+<li><strong>required</strong> - Set/Clear the elements required property AND css-class, based on truthy of value-exp</li>
+<li><strong>selected</strong> - Set/Clear the elements selected property AND css-class, based on truthy of value-exp</li>
 <li><strong>more</strong> - For full details, see the documentation (or read the code, its only ~100 lines!!)</li>
 <li><strong>custom</strong> - Add your own. Just create a function. e.g <code>vmrLite.tagFns['myslide'] = function (tag,elem,viewModel) { ... }</code></li>
 </ul>
@@ -113,7 +113,7 @@ and value expression is evaluated  with the variables &quot;root&quot; and &quot
     &lt;/div>
 &lt;/fieldset></code></pre><p>js</p>
 <pre class="prettyprint source"><code>function TicketsViewModel(config) {
-    &quot;use strict&quot;;   
+    &quot;use strict&quot;;
     this.container = null;
     this.tickets = [
         { name: &quot;Economy&quot;, code: &quot;E&quot;, price: 199.95 },
@@ -124,10 +124,10 @@ and value expression is evaluated  with the variables &quot;root&quot; and &quot
     // Add sync/render for convenience
     this.sync = function() { vmrLite.sync( this.container, this ); };
     this.render = function() { vmrLite.render( this.container, this ); };
-    this.open = function(container) { 
+    this.open = function(container) {
         this.container = container;
         vmrLite.render( this.container, this );
-    };  
+    };
     // Instance functions to handle events
     this.getChosenTicketDetails = function () {
         if ( !this.chosenTicketCode ) return null;
@@ -146,9 +146,7 @@ and value expression is evaluated  with the variables &quot;root&quot; and &quot
 <pre class="prettyprint source"><code>&lt;script language=&quot;JavaScript&quot; type=&quot;text/JavaScript&quot;>
     (new TicketsViewModel()).open(document.getElementById('ticketsView'));
 &lt;/script></code></pre><h4>Change log</h4><pre class="prettyprint source"><code>2016-02-04 renamed the free variable (with expression evaluation) from &quot;vm&quot; -> &quot;root&quot;
-2016-02-04 removed module.__dirname as in-consistent with CommonJS (use require.cwd as a replacement)</code></pre><h4>TODO</h4><ul>
-<li>Enhance evalWith, to look for plain properties, before using the more complex evaluation using &quot;new Function&quot;</li>
-</ul></div>
+2016-02-04 removed module.__dirname as in-consistent with CommonJS (use require.cwd as a replacement)</code></pre></div>
         
 
         
@@ -296,7 +294,7 @@ and value expression is evaluated  with the variables &quot;root&quot; and &quot
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line521">line 521</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line550">line 550</a>
     </li></ul></dd>
     
 
@@ -366,14 +364,14 @@ and value expression is evaluated  with the variables &quot;root&quot; and &quot
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>"0.4"</li>
+            <li>"0.5"</li>
         </ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line209">line 209</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -408,7 +406,7 @@ and value expression is evaluated  with the variables &quot;root&quot; and &quot
 
 <div class="description">
     <p>Helper.  Clear the elem.on events, on the element and those of the children.</p>
-<p>Call to free/clear any references from Dom nodes to your fns. 
+<p>Call to free/clear any references from Dom nodes to your fns.
 Alternatively use vmrLite.clear.</p>
 </div>
 
@@ -502,7 +500,7 @@ Alternatively use vmrLite.clear.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1372">line 1372</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1451">line 1451</a>
     </li></ul></dd>
     
 
@@ -540,7 +538,8 @@ Alternatively use vmrLite.clear.</p>
 
 
 <div class="description">
-    <p>Helper.  Find the closest Element, up the DOM tree from el, with anattribute of index. and return its index (as a Number)</p>
+    <p>Helper.  Find the closest Element, up the DOM tree from el, with an attribute of index.
+ and return its index (as a Number)</p>
 </div>
 
 
@@ -656,7 +655,7 @@ Alternatively use vmrLite.clear.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line373">line 373</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line401">line 401</a>
     </li></ul></dd>
     
 
@@ -811,7 +810,7 @@ i.e. Manually delete a repeating element, on behalf of the render</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line403">line 403</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line431">line 431</a>
     </li></ul></dd>
     
 
@@ -945,7 +944,7 @@ See also clearOnEventsChildren</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1421">line 1421</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1500">line 1500</a>
     </li></ul></dd>
     
 
@@ -1100,7 +1099,7 @@ See also clearOnEventsChildren</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1207">line 1207</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1282">line 1282</a>
     </li></ul></dd>
     
 
@@ -1278,7 +1277,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line264">line 264</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line285">line 285</a>
     </li></ul></dd>
     
 
@@ -1409,7 +1408,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1072">line 1072</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1119">line 1119</a>
     </li></ul></dd>
     
 
@@ -1564,7 +1563,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1352">line 1352</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line1431">line 1431</a>
     </li></ul></dd>
     
 
@@ -1719,7 +1718,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line717">line 717</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line764">line 764</a>
     </li></ul></dd>
     
 
@@ -1992,7 +1991,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line539">line 539</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line568">line 568</a>
     </li></ul></dd>
     
 
@@ -2147,7 +2146,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line677">line 677</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line724">line 724</a>
     </li></ul></dd>
     
 
@@ -2186,7 +2185,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
 
 <div class="description">
     <p>Set the elements dataset/data-attribute as defined by the tag parameter  (see tagFns for details).</p>
-<p>NOTE: setAttribute (vs dataset) is used internally since faster in IE !!. </p>
+<p>NOTE: setAttribute (vs dataset) is used internally since faster in IE !!.</p>
 <p>vm-attr-param=&quot;expr&quot; =&gt; elem.setAttribute('data-'+tag.param,tag.result);</p>
 </div>
 
@@ -2303,7 +2302,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line736">line 736</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line783">line 783</a>
     </li></ul></dd>
     
 
@@ -2457,7 +2456,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line750">line 750</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line797">line 797</a>
     </li></ul></dd>
     
 
@@ -2612,7 +2611,7 @@ Used as replacement for elem.classList.toggle as IE10/11 does not support the 2n
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line785">line 785</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line832">line 832</a>
     </li></ul></dd>
     
 
@@ -2768,7 +2767,7 @@ if tag.result is truthy set to '' else 'none'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line636">line 636</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line682">line 682</a>
     </li></ul></dd>
     
 
@@ -2923,7 +2922,7 @@ if tag.result is truthy set to '' else 'none'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line907">line 907</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line954">line 954</a>
     </li></ul></dd>
     
 
@@ -3079,7 +3078,7 @@ if tag.result is truthy set to '' else 'none'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line555">line 555</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line584">line 584</a>
     </li></ul></dd>
     
 
@@ -3234,7 +3233,7 @@ if tag.result is truthy set to '' else 'none'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line618">line 618</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line664">line 664</a>
     </li></ul></dd>
     
 
@@ -3388,7 +3387,7 @@ if tag.result is truthy set to '' else 'none'.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line599">line 599</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line643">line 643</a>
     </li></ul></dd>
     
 
@@ -3567,7 +3566,7 @@ Automatically binds the function to the viewModelObj</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line863">line 863</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line910">line 910</a>
     </li></ul></dd>
     
 
@@ -3744,7 +3743,7 @@ Automatically binds the function to the viewModelObj</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line889">line 889</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line936">line 936</a>
     </li></ul></dd>
     
 
@@ -3899,7 +3898,7 @@ Automatically binds the function to the viewModelObj</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line766">line 766</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line813">line 813</a>
     </li></ul></dd>
     
 
@@ -4054,7 +4053,7 @@ Automatically binds the function to the viewModelObj</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line804">line 804</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line851">line 851</a>
     </li></ul></dd>
     
 
@@ -4209,7 +4208,7 @@ Automatically binds the function to the viewModelObj</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line822">line 822</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line869">line 869</a>
     </li></ul></dd>
     
 
@@ -4366,7 +4365,7 @@ Automatically binds the function to the viewModelObj</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line698">line 698</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line745">line 745</a>
     </li></ul></dd>
     
 
@@ -4525,7 +4524,7 @@ Elem.parent.previousElementSibling is assumed to be the header table to sync.</p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line941">line 941</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line988">line 988</a>
     </li></ul></dd>
     
 
@@ -4680,7 +4679,7 @@ Elem.parent.previousElementSibling is assumed to be the header table to sync.</p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line571">line 571</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line608">line 608</a>
     </li></ul></dd>
     
 
@@ -4834,7 +4833,7 @@ Elem.parent.previousElementSibling is assumed to be the header table to sync.</p
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line585">line 585</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line629">line 629</a>
     </li></ul></dd>
     
 
@@ -4991,7 +4990,7 @@ If the element type is a 'radio' it sets checked based on  ( value-exp == radio 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line655">line 655</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line701">line 701</a>
     </li></ul></dd>
     
 
@@ -5168,7 +5167,7 @@ If the element type is a 'radio' it sets checked based on  ( value-exp == radio 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line238">line 238</a>
+        <a href="vmrLite.js.html">vmrLite.js</a>, <a href="vmrLite.js.html#line259">line 259</a>
     </li></ul></dd>
     
 
@@ -5238,7 +5237,7 @@ If the element type is a 'radio' it sets checked based on  ( value-exp == radio 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon May 16 2016 20:01:25 GMT+1200 (New Zealand Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 03 2016 20:31:50 GMT+1200 (New Zealand Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

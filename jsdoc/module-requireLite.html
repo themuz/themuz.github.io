@@ -51,12 +51,12 @@
 <li><em>module</em> - In each module, the &quot;module&quot; free variable is a reference to the object representing the current module being loaded.</li>
 <li><em>module.exports</em> - The object assigned to module.exports will be the require of the requireLite call.</li>
 <li><em>encapsulated</em> - js is encapsulated in the module pattern, no namespace/global pollution. i.e. Variables local to the module will be private</li>
-<li><em>no dependancies</em> </li>
+<li><em>no dependancies</em></li>
 </ul>
 <h4>Other file types :=</h4><ul>
 <li><em>json support</em> - If the url extension is '.json' json will be loaded, and parsed (JSON.parse) and object returned.</li>
-<li><em>css support</em> - If the url extension is '.css', css will be automatically loaded as a window.document.head.link and link's DOM-Element returned. </li>
-<li><em>html support</em> - If the url extension is '.html' the html will be loaded into a div and div's html-Element returned. </li>
+<li><em>css support</em> - If the url extension is '.css', css will be automatically loaded as a window.document.head.link and link's DOM-Element returned.</li>
+<li><em>html support</em> - If the url extension is '.html' the html will be loaded into a div and div's html-Element returned.</li>
 </ul>
 <h4>Usage</h4><pre class="prettyprint source"><code>var loadedObject = require(url,[callback]);</code></pre><p>loadedObject is whatever is returned by the js, by assigning to module.exports (see below)</p>
 <h4>JS Modules (.js)</h4><p>In each js module the &quot;module&quot; free variable is a reference to the object representing the current module.</p>
@@ -67,31 +67,31 @@
 <li>filename - String - The pathname/url to the module. (e.g. /js/modules/Circle.js)</li>
 <li>loaded - Boolean - Whether or not the module is done loading, or is in the process of loading</li>
 </ul>
-<p>In addition the &quot;exports&quot; free variable is also available, corresponds to module.exports and initialized to {}. 
-If you use the &quot;exports&quot; variable, only defined new properties/methods. 
+<p>In addition the &quot;exports&quot; free variable is also available, corresponds to module.exports and initialized to {}.
+If you use the &quot;exports&quot; variable, only defined new properties/methods.
 Don't assign to it, as will be lost. If you wish to return
 just an object assign to &quot;module.exports&quot; instead.</p>
-<h4>Deferred loading / Cyclic dependencies</h4><p>If you wish to defer loading dependent modules to run-time (vs load-time) ensure you save/use the 
-requireLite.cwd (Current working directory) property at load time,
-since the cwd may differ at run-time. 
-Use this variable when loading modules at run-time.
-NOTE: cwd INCLUDES the trailing &quot;/&quot;</p>
+<h4>The module wrapper</h4><p>Before a module's code is executed, It is wrapped with a function that looks like the following:</p>
+<pre class="prettyprint source"><code>(function (exports, require, module, __filename, __dirname) {
+    //  Your module code actually lives in here
+});</code></pre><h4>Deferred loading / Cyclic dependencies</h4><p>If you wish to defer loading dependent modules to run-time (vs load-time) ensure you use the
+paramter variable __dirname when loading resouces, as the physical current working directory
+may be different.</p>
+<p>NOTE: __dirname does NOT include the trailing &quot;/&quot;</p>
 <p>If you have cyclic dependencies at load time (does not happen often, but can happen)
-e.g. A requires B that requires A. Defer loading of the dependent module to run-time. </p>
+e.g. A requires B that requires A. Defer loading of the dependent module to run-time.</p>
 <p>e.g</p>
-<pre class="prettyprint source"><code>function MyModule() { etc ... }    
-
-MyModule.cwd = require.cwd || ''; // This allows js compatability with node-js or browser 
+<pre class="prettyprint source"><code>function MyModule() { etc ... }
 
 MyModule.doitlater = function() {
-    defered_module_loaded=require(MyModule.cwd + './deferred_module.js')
+    defered_module_loaded=require( __dirname + '/deferred_module.js')
 }</code></pre><h4>Isnt sync slow, with lots of http requests.</h4><p>NO, Not if  all modules are pre-loaded (as we should do in production mode for performance)
 The require is immediate, why code for complex dependences/async code when not needed.</p>
 <p>In fact if we can pre load the modules FASTER, i.e. in parallel (subject to dependencies)</p>
-<p>Pre-loading can be performed by use of the new static method require.asyncLoadStack 
+<p>Pre-loading can be performed by use of the new static method require.asyncLoadStack
 (see asyncLoadStack, buildLoadStackDetails and buildLoadStackDetails for details)</p>
 <h4>Example Module (circle.js)</h4><pre class="prettyprint source"><code>var PI = Math.PI;
-var Circle={}; 
+var Circle={};
 
 Circle.area = function (r) {
   return PI * r * r;
@@ -103,18 +103,18 @@ Circle.circumference = function (r) {
 
 // we could of use the free var &quot;exports&quot; instead of Circle in this example.
 // in which case the below statement, is not required (i.e exports === module.exports)
-module.exports = Circle; </code></pre><h4>Example Usage  (async)</h4><pre class="prettyprint source"><code>var  Circle=require('./lib/circle.js');
+module.exports = Circle;</code></pre><h4>Example Usage  (async)</h4><pre class="prettyprint source"><code>var  Circle=require('./lib/circle.js');
 alert('The are of a 1&quot; circle is ' + Circle.area(1) + '&quot;')</code></pre><h4>Example Usage  (async)</h4><pre class="prettyprint source"><code>require('./lib/circle.js', function(circle) {
-  // Do stuff with the &quot;circle&quot;, now its loaded   
+  // Do stuff with the &quot;circle&quot;, now its loaded
 });</code></pre><h4>Example Bulk Async Preload load</h4><p>Sample code to load modules at page load.</p>
 <pre class="prettyprint source"><code>&lt;script type=&quot;text/javascript&quot;>
 
 window.addEventListener(&quot;load&quot;,function() {
     var REQUIRE_LOAD_STACK = [
         [&quot;./js/logger.js&quot;, &quot;./js/curl.js&quot;],
-        [&quot;./model/WatchModel.js&quot;, &quot;./model/ConfigModel.js&quot;], 
+        [&quot;./model/WatchModel.js&quot;, &quot;./model/ConfigModel.js&quot;],
         [&quot;./model/WatchList.js&quot;, &quot;./js/WatchEditVM.js&quot;],
-        [&quot;./js/WatchListVM.js&quot;], 
+        [&quot;./js/WatchListVM.js&quot;],
         [&quot;./js/mainUI.js&quot;] ];
 
     require.asyncLoadStack( REQUIRE_LOAD_STACK, function() {
@@ -124,9 +124,10 @@ window.addEventListener(&quot;load&quot;,function() {
 });</code></pre><h4>Change log</h4><pre class="prettyprint source"><code>2016-02-04 rename module.__filename -> filename, __id -> id for consistency with CommonJS/node-js
 2016-02-04 removed module.__dirname as in-consistent with CommonJS (use require.cwd as a replacement)
 2016-05-15 Added showLoadStack to console.log module dependacies/load order
-2016-05-15 Added asyncLoadStack preload a set of modules for efficiency (see showLoadStack) </code></pre><h4>TODO:-</h4><ul>
+2016-05-15 Added asyncLoadStack preload a set of modules for efficiency (see showLoadStack)
+2016-05-29 Removed cwd, now use parameter __dirname to enable runtime loading. (retained cwd for internal use)</code></pre><h4>TODO:-</h4><ul>
 <li>Ability to place the app in dev mode, build up the modules/depencancies by running the application. DONE (see showLoadStack)</li>
-<li>Method to load all modules at startup. DONE (see asyncLoadStack) </li>
+<li>Method to load all modules at startup. DONE (see asyncLoadStack)</li>
 <li>Handle cyclic references e.g. A requires B that requires A. DONE (see runtime-loading notes below)</li>
 </ul></div>
         
@@ -222,90 +223,13 @@ window.addEventListener(&quot;load&quot;,function() {
 
         
             
-<h4 class="name" id=".requireLite.cwd"><span class="type-signature">(static) </span>requireLite.cwd<span class="type-signature"> :string</span></h4>
-
-
-
-
-<div class="description">
-    <p>Current Working Directory WITH a trailing &quot;/&quot;</p>
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>'./'</li>
-        </ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line296">line 296</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
 <h4 class="name" id=".requireLite.inBrowser"><span class="type-signature">(static) </span>requireLite.inBrowser<span class="type-signature"> :Boolean</span></h4>
 
 
 
 
 <div class="description">
-    <p>Always true since running in the brower. 
+    <p>Always true since running in the brower.
 Will be undefined if running under node-js require.</p>
 </div>
 
@@ -359,7 +283,7 @@ Will be undefined if running under node-js require.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line352">line 352</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line361">line 361</a>
     </li></ul></dd>
     
 
@@ -436,7 +360,7 @@ Will be undefined if running under node-js require.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line335">line 335</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line344">line 344</a>
     </li></ul></dd>
     
 
@@ -506,14 +430,14 @@ Will be undefined if running under node-js require.</p>
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>"0.3"</li>
+            <li>"0.4"</li>
         </ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line283">line 283</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line291">line 291</a>
     </li></ul></dd>
     
 
@@ -659,7 +583,7 @@ Will be undefined if running under node-js require.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line162">line 162</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -722,7 +646,8 @@ Will be undefined if running under node-js require.</p>
 
 
 <div class="description">
-    <p>Load Array (Set) of modules in parallel, then call callback when all loaded.</p>
+    <p>Load Array (Set) of modules in parallel, then call callback when all loaded.
+each module is assumed to be independant of each other.</p>
 <p>Internally used by asyncLoadStack</p>
 </div>
 
@@ -839,7 +764,7 @@ Will be undefined if running under node-js require.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line600">line 600</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line619">line 619</a>
     </li></ul></dd>
     
 
@@ -882,7 +807,7 @@ Will be undefined if running under node-js require.</p>
 <p>Each inner Set (an array) of module-filenames/urls is loaded in parallel (with no defined order)
 The loader assumes the module only has dependancies (requires) from prior module sets.
 i.e The fist set of modules is loaded, then the next set.</p>
-<p>e.g 
+<p>e.g
  [ [base-module-a.js,base-module-b.js,base-module-c.js],
    [next-module-that-requires-a-base-module.js,another-module-that-requires-a-base-module.js],
    [newer-module-that-requires-next-module.js]</p>
@@ -1002,7 +927,7 @@ i.e The fist set of modules is loaded, then the next set.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line652">line 652</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line671">line 671</a>
     </li></ul></dd>
     
 
@@ -1040,7 +965,7 @@ i.e The fist set of modules is loaded, then the next set.</p>
 
 
 <div class="description">
-    <p>Build the list of modules to load in optional order, 
+    <p>Build the list of modules to load in optional order,
 So that any requied modules are already loaded.</p>
 <p>This is determined by the run-time confguration, of modules loaded.</p>
 <p>This also includes information of requires, and</p>
@@ -1136,7 +1061,7 @@ So that any requied modules are already loaded.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line513">line 513</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line531">line 531</a>
     </li></ul></dd>
     
 
@@ -1267,7 +1192,7 @@ So that any requied modules are already loaded.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line465">line 465</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line483">line 483</a>
     </li></ul></dd>
     
 
@@ -1351,7 +1276,7 @@ This is suitable for use by asyncLoadStack.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line564">line 564</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line582">line 582</a>
     </li></ul></dd>
     
 
@@ -1505,7 +1430,7 @@ This is suitable for use by asyncLoadStack.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line370">line 370</a>
+        <a href="requireLite.js.html">requireLite.js</a>, <a href="requireLite.js.html#line379">line 379</a>
     </li></ul></dd>
     
 
@@ -1553,7 +1478,7 @@ This is suitable for use by asyncLoadStack.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon May 16 2016 20:01:25 GMT+1200 (New Zealand Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 03 2016 20:31:50 GMT+1200 (New Zealand Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -50,7 +50,7 @@ See this README.md OR jsdoc on-line here [jsdoc VMBase!](http://themuz.github.io
 
         if ( !this.className ) this.className = 'SampleVM'
         VMBase._init(this, config);
-        
+
         // Listen for events, that affect me, by convention thay are linked to document.body
         // (Yes this.container may be null, this is ok, events are registered with addEventListeners on open)
         this.eventListeners.push({ elem: document.body, type: 'sampleModelSelected', listener: this.onModelSelected.bind(this) });
@@ -63,17 +63,19 @@ See this README.md OR jsdoc on-line here [jsdoc VMBase!](http://themuz.github.io
 
     SampleVM.prototype = Object.create(VMBase.prototype);
     SampleVM.prototype.constructor = SampleVM;
-    SampleVM.prototype.cwd = (require.cwd || ''); // VMBase requires the cwd, for deferred loading is using requireLite !!
+
+    // The class needs to know the __dirname when loaded, for optional content
+    SampleVM.prototype.loader_dirname = ( __dirname || '');
 
     SampleVM.prototype.template = {  // Optional - used to dynamically load the VM partial html.
         div: null,  // div to clone for container.innerHTML
-        uri: null, // uri to the html to load and assign to div. 
+        uri: null, // uri to the html to load and assign to div.
         singleton: false, // true only if this is a singleton class. i.e. the template is used once and can be moved around the page
-        cssUri: null  // uri to the css to load to support the div. 
-    }; 
+        cssUri: null  // uri to the css to load to support the div.
+    };
 
  * @class
- * @classdesc View Model base skeleton to inherit from and use. 
+ * @classdesc View Model base skeleton to inherit from and use.
  * @param {object} config - Configuration options. (See _init)
  */
 
@@ -103,7 +105,7 @@ VMBase.debug = false;
 
 /**
 
-The template to use if defined, 
+The template to use if defined,
 
 - **div** - Clone html elements from this div
 - **uri** - load partial html from this uri
@@ -117,13 +119,13 @@ The template to use if defined,
 */
 
 
-VMBase.prototype.template = {  
-    div: null, 
-    uri: null, 
+VMBase.prototype.template = {
+    div: null,
+    uri: null,
     singleton: false,
-    cssUri: null }; 
+    cssUri: null };
 
-VMBase.prototype.cwd = '';
+VMBase.prototype.loader_dirname = '';
 
 /**
 
@@ -131,7 +133,7 @@ Initalize the base class. Use when inherit.
 
 @function
 @memberof VMBase
-@param config {object} The initial settings for the class. 
+@param config {object} The initial settings for the class.
 @param config.container {DOMElement|String} The container div
 @param config.onCloseCallback {fuction} Function to call when close
 @param config.id {String} id for the object (Default is vmrLite.SEQ)
@@ -173,7 +175,7 @@ VMBase.prototype._init = function (config) {
 
 /**
 
-Open this view (Apply template, and render) in the container specified. 
+Open this view (Apply template, and render) in the container specified.
 
 @function
 @memberof VMBase
@@ -192,24 +194,24 @@ VMBase.prototype._open = function (container) {
     if (container) this.container = container;
     if (typeof this.container === 'string') { this.container = document.getElementById(this.container); }
     if (!this.container)  console.log(this.className+': ERROR: container is null');
-    if (this.container.jquery) { this.container = this.container.get(0); } // Make it a DOM Element     
+    if (this.container.jquery) { this.container = this.container.get(0); } // Make it a DOM Element
 
     this.container.setAttribute('className', this.className);
     if (!this.container.id) this.container.id = this.id;
 
 
-    // load css from uri. If defined and not already loaded. 
+    // load css from uri. If defined and not already loaded.
     if ( this.template &amp;&amp; this.template.cssUri &amp;&amp; !this.template.link ) {
-        this.template.link = require(this.cwd + this.template.cssUri);
+        this.template.link = require(this.loader_dirname  + '/' + this.template.cssUri);
     }
     // load template from uri. this. note: template is a Class property. !!
     if ( this.template &amp;&amp; this.template.uri &amp;&amp; !this.template.div ) {
-        this.template.div = require(this.cwd + this.template.uri);
+        this.template.div = require(this.loader_dirname  + '/' + this.template.uri);
     }
 
-    // clone template 
+    // clone template
     // 2016-04-03 Updated to clone the div content, not the div itself.
-    if ( this.template &amp;&amp; this.template.div ) {    
+    if ( this.template &amp;&amp; this.template.div ) {
         vmrLite.empty(this.container); // Empty the container
         // firstElementChild
         if ( this.template.singleton ) {
@@ -217,18 +219,18 @@ VMBase.prototype._open = function (container) {
             childDiv = this.template.div.firstElementChild;
             while ( childDiv ) {
                 this.template.div.removeChild( childDiv );
-                this.container.appendChild( childDiv );   
-                childDiv = this.template.div.firstElementChild;      
-            }    
+                this.container.appendChild( childDiv );
+                childDiv = this.template.div.firstElementChild;
+            }
         } else {
             // Clone
             childDiv = this.template.div.firstElementChild;
             while ( childDiv ) {
-                this.container.appendChild( childDiv.cloneNode(true) );   
-                childDiv = childDiv.nextElementSibling;      
+                this.container.appendChild( childDiv.cloneNode(true) );
+                childDiv = childDiv.nextElementSibling;
             }
         }
-    }        
+    }
 
     // Build list of bindings.
     this.addEventListeners();
@@ -236,7 +238,7 @@ VMBase.prototype._open = function (container) {
 
     this._isopen = true;
 
-    // Focus to the 1st input. 
+    // Focus to the 1st input.
     // Also container mignt not be visible
     if ( this.container.style.display !== 'none') {
         nodeList = this.container.querySelectorAll('input,button,select');
@@ -244,11 +246,11 @@ VMBase.prototype._open = function (container) {
         for (i=0;i&lt;nodeList.length;i++)
           if ( nodeList[i].style.display !== 'none' ) {
               break;
-          }    
+          }
         if ( i&lt;nodeList.length ) {
             window.setTimeout( function() {
                 nodeList[i].focus();
-            }, 10);                        
+            }, 10);
         }
     }
     return this;
@@ -279,7 +281,7 @@ binds the eventListeners, (i.e. calls addEventListener for each element of event
 
 Only adds listensers if not already listening
 
-If "elem" is null, assumes this is this.container, 
+If "elem" is null, assumes this is this.container,
 this you can add items to the eventListeners Array before the container is defined.
 
 @function
@@ -300,7 +302,7 @@ VMBase.prototype.addEventListeners = function () {
         eListener = this.eventListeners[i];
         if ( !eListener.listening ) {
             if ( !eListener.elem ) eListener.elem = this.container;
-            if ( eListener.elem  ) {                
+            if ( eListener.elem  ) {
                 eListener.elem.addEventListener(eListener.type, eListener.listener, false);
                 eListener.listening = true;
             }
@@ -310,7 +312,7 @@ VMBase.prototype.addEventListeners = function () {
 };
 
 /**
-Unbind the eventListeners when close, 
+Unbind the eventListeners when close,
 It is IMPORTANT to removeEventListener so the object has NO external references from say a dom elements,
 so it can be garbage collected.
 
@@ -324,15 +326,15 @@ Calls removeEventListener for each element of eventListeners that is listening.
 */
 
 VMBase.prototype.removeEventListeners = function () {
-    var i,eListener,eTarget;    
+    var i,eListener,eTarget;
     if ( VMBase.debug ) console.log(this.className + '.removeEventListeners', this.container);
 
     for (i=0;i&lt;this.eventListeners.length;i++) {
         eListener = this.eventListeners[i];
         if ( eListener.listening ) {
                 eListener.elem.removeEventListener(eListener.type, eListener.listener, false);
-                eListener.listening = false;    
-                if ( eListener.elem == this.container )  eListener.elem  = null;          
+                eListener.listening = false;
+                if ( eListener.elem == this.container )  eListener.elem  = null;
         }
     }
     this.eventListeners = [];
@@ -353,9 +355,16 @@ Simply a wrapper for vmrLite.render where the container is this.container.
 */
 
 VMBase.prototype.render = function() {
+    var ts;
     this._renderDeferred = false;
     // this.changed = false; // Dont clear, As app may of done a change and wants to show it in the UI
+    if ( this.profile_elem ) // If profile feedback element is defined.
+        ts=performance.now();
+
     vmrLite.render(this.container, this );
+    if ( this.profile_elem ) {
+        this.profile_elem.textContent = (performance.now()-ts).toFixed()+'ms';
+    }
     return this;
 };
 
@@ -365,8 +374,8 @@ Queue a render in ~10ms.
 
 
 If a render is already pending, no operation is performed.
-This is the preferred way to render, as it is not always clear in a app, 
-if a later action will perform a render. 
+This is the preferred way to render, as it is not always clear in a app,
+if a later action will perform a render.
 
 If immediate feed-back is required use render();
 
@@ -380,12 +389,12 @@ VMBase.prototype.defer_render = function() {
     if ( !this._renderDeferred ) {
         this._renderDeferred=true;
         window.setTimeout(this.render.bind(this), 100);
-    }    
+    }
     return this;
 };
 
 /**
-Sync inputs -> object 
+Sync inputs -> object
 
 Simply a wrapper for vmrLite.sync where the container is this.container.
 
@@ -400,7 +409,7 @@ VMBase.prototype.sync = function() {
 };
 
 /**
-Show the container 
+Show the container
 
 Clear this.container.style.display
 
@@ -410,13 +419,13 @@ Clear this.container.style.display
 
 */
 
-VMBase.prototype.show = function() { 
+VMBase.prototype.show = function() {
     this.container.style.display = '';
     return this;
-};  
+};
 
 /**
-Hide the container 
+Hide the container
 
 Set this.container.style.display to 'none'
 
@@ -426,14 +435,14 @@ Set this.container.style.display to 'none'
 
 */
 
-VMBase.prototype.hide = function() { 
+VMBase.prototype.hide = function() {
     this.container.style.display = 'none';
     return this;
-};  
+};
 
 
 /**
-Close/cleanup. call removeEventListeners, call onCloseCallback, 
+Close/cleanup. call removeEventListeners, call onCloseCallback,
 clear 'on' event on container child elements,
 empty the container (if cloned from template)
 
@@ -464,16 +473,16 @@ VMBase.prototype._close = function () {
     // Clear the contents, if we used a template. So nodes are freeed up.
     if ( this.template.div ) {
         if ( this.template.singleton ) {
-            // Move Element back to original div 
+            // Move Element back to original div
             childDiv = this.container.firstElementChild;
             while ( childDiv ) {
                 this.container.removeChild( childDiv );
-                this.template.div.appendChild( childDiv );   
-                childDiv = this.container.firstElementChild;       
-            }      
+                this.template.div.appendChild( childDiv );
+                childDiv = this.container.firstElementChild;
+            }
         } else {
             // Delete contents
-            vmrLite.empty(this.container);    
+            vmrLite.empty(this.container);
         }
     }
     this._isopen = false;
@@ -487,7 +496,7 @@ VMBase.prototype._close = function () {
 Close/cleanup. Base implementation calls _close
 
 Inherit and Override/Overload for use. i.e
-- Do you own clean up 
+- Do you own clean up
 - Call this._close()
 
 @function
@@ -502,7 +511,7 @@ VMBase.prototype.close = function () {
 
 /**
 
-Trigger an custom event. 
+Trigger an custom event.
 Simply a wrapper for vmrLite.triggerEvent where the container is this.container.
 
 @function
@@ -522,7 +531,7 @@ VMBase.prototype.trigger = function ( etype, detail ) {
 
 /**
 
-Generic onClickClose handler, User has clicked a button, to request the window closed, 
+Generic onClickClose handler, User has clicked a button, to request the window closed,
 base implementation simply calls close();
 
 @function
@@ -540,8 +549,8 @@ VMBase.prototype.onClickClose  = function (ev) {
 
 /**
 
-Generic onChange handler, 
-simply sets this.changed=true, 
+Generic onChange handler,
+simply sets this.changed=true,
 The base class listens for 'change' events via onChange.
 
 @function
@@ -582,7 +591,7 @@ if (typeof(module) !== 'undefined') {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon May 16 2016 20:01:25 GMT+1200 (New Zealand Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Aug 03 2016 20:31:50 GMT+1200 (New Zealand Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
