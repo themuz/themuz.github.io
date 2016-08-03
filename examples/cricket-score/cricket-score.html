@@ -64,25 +64,25 @@
         </thead>
         <tbody>
 
-        <tr class="batter" vm-with="this.getPartner1()" vm-selected="(vm.currBall && this.code==vm.currBall.batterCode)">
+        <tr class="batter" vm-with="this.getPartner1()" vm-selected="(root.currBall && this.code==root.currBall.batterCode)">
             <td><label class="fixed">Batter:</label></td>
             <td>
                 <select class="partner1"
-                        vm-selected="(vm.currBall && this.code==vm.currBall.batterCode)"
+                        vm-selected="(root.currBall && this.code==root.currBall.batterCode)"
                         vm-value="this.code" vm-on-change="onChangePartner">
                 <option value=''>Choose...</option>
-                <option vm-each="vm.batters" vm-text="this.name" vm-value="this.code"></option>
+                <option vm-each="root.batters" vm-text="this.name" vm-value="this.code"></option>
             </select></td>
             <td class="right small" vm-html="app.fmtNumber(this.nBFaced)">Bf</td>
             <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
         </tr>
-        <tr class="batter" vm-with="this.getPartner2()" vm-selected="(vm.currBall && this.code==vm.currBall.batterCode)">
+        <tr class="batter" vm-with="this.getPartner2()" vm-selected="(root.currBall && this.code==root.currBall.batterCode)">
             <td><label  class="fixed">Batter:</label></td>
             <td><select class="partner2"
-                        vm-selected="(vm.currBall && this.code==vm.currBall.batterCode && this.code!=vm.currBall.nonStrikerCode)"
+                        vm-selected="(root.currBall && this.code==root.currBall.batterCode && this.code!=root.currBall.nonStrikerCode)"
                         vm-value="this.code" vm-on-change="onChangePartner">
                 <option value=''>Choose...</option>
-                <option vm-each="vm.batters" vm-text="this.name" vm-value="this.code"></option>
+                <option vm-each="root.batters" vm-text="this.name" vm-value="this.code"></option>
             </select></td>
             <td class="right small" vm-html="app.fmtNumber(this.nBFaced)">Bf</td>
             <td class="right" vm-html="app.fmtNumber(this.nRuns)">R</td>
@@ -92,7 +92,7 @@
             <td colspan="3"><select class="xx"
                         vm-value="this.code" vm-on-change="onChangeBowler">
                 <option value=''>Choose...</option>
-                <option vm-each="vm.bowlers" vm-text="this.name" vm-value="this.code"></option></select>
+                <option vm-each="root.bowlers" vm-text="this.name" vm-value="this.code"></option></select>
             </td>
             <!--td class="right small" vm-html="app.fmtNumber(this.nBalls)">99</span></td-->
             <!--td class="right" vm-html="app.fmtNumber(this.nRuns+this.nNoball+this.nWides)">99</span></td-->
@@ -101,9 +101,9 @@
             <td><label class="fixed">Balls:</label></td>
             <td colspan="3">
                 <button class="ball"
-                        vm-class-partner1="this.batterCode == vm.partner1Code"
-                        vm-class-partner2="this.batterCode == vm.partner2Code"
-                        vm-selected='this===vm.currBall' vm-each="this.currOver.balls" vm-html = "this.getMarkup()"></button>
+                        vm-class-partner1="this.batterCode == root.partner1Code"
+                        vm-class-partner2="this.batterCode == root.partner2Code"
+                        vm-selected='this===root.currBall' vm-each="this.currOver.balls" vm-html = "this.getMarkup()"></button>
             </td>
         </tr>
         <tr>
@@ -112,8 +112,8 @@
                 <button vm-onclick="this.onClickOverPrev" title="Prev Over">&lt;&lt;
                 </button><button vm-onclick="this.onClickBallPrev" title="Prev Ball">&lt;
                 <!-- button vm-onclick="this.onClickBallInsert" title="Insert Ball">&plus;</button -->
-                </button><button vm-onclick="vm.onClickBallDelete" title="Delete Ball">&#9249;
-                </button><button vm-onclick="vm.onClickBallAdd" title="Add Ball">+
+                </button><button vm-onclick="root.onClickBallDelete" title="Delete Ball">&#9249;
+                </button><button vm-onclick="root.onClickBallAdd" title="Add Ball">+
                 </button><button vm-onclick="this.onClickBallNext"  title="Next Ball">&gt;
                 </button><button vm-onclick="this.onClickOverNext"  title="Next Over">&gt;&gt;
                 </button><button vm-onclick="REBUILD">[R]</button>
@@ -148,7 +148,7 @@
                 <select vm-value="this.dismissalFielderId"
                         vm-on-change="onChangeDismissalFielderId">
                     <option value="">Select ...</option>
-                    <option vm-each="vm.bowlers" vm-value="this.code" vm-text="this.name"></option>
+                    <option vm-each="root.bowlers" vm-value="this.code" vm-text="this.name"></option>
                 </select>
             </span>
             <label><i>Click # Runs to confirm</i></label>
@@ -185,9 +185,9 @@
 
 
 <div>
-<fieldset vm-onclick="vm.onClickOverSelect">
+<fieldset vm-onclick="root.onClickOverSelect">
     <legend>Over:Runs/W</legend>
-    <button class="small over" style="padding: 1px" vm-each="this.overs" vm-selected="this==vm.currOver" vm-text="this.getRunsNWickets()" >
+    <button class="small over" style="padding: 1px" vm-each="this.overs" vm-selected="this==root.currOver" vm-text="this.getRunsNWickets()" >
     </button>
 
 </fieldset>
@@ -215,9 +215,9 @@
         </thead>
         <tbody>
         <tr vm-each="bowlers">
-            <td><span vm-text="this.name" vm-selected="this.code===vm.currOver.bowlerId">N</span></td>
+            <td><span vm-text="this.name" vm-selected="this.code===root.currOver.bowlerId">N</span></td>
             <td>
-                <span class="markup" vm-each="overs" vm-selected='this===vm.currOver' vm-html="this.getMarkup()"></span>
+                <span class="markup" vm-each="overs" vm-selected='this===root.currOver' vm-html="this.getMarkup()"></span>
             </td>
             <!--td class="right" vm-html="app.fmtNumber(nNoball)">Nb</td-->
             <!--td class="right" vm-html="app.fmtNumber(nWides)">Wd</td-->
@@ -256,11 +256,11 @@
         </thead>
         <tbody>
         <tr vm-each="batters">
-            <td><span vm-text="(vm._batterHack=this).name" vm-selected="vm.currBall && this.code==vm.currBall.batterCode"></span> </td>
+            <td><span vm-text="(root._batterHack=this).name" vm-selected="root.currBall && this.code==root.currBall.batterCode"></span> </td>
             <td>
                 <span class="markup" vm-each="overs"
-                      vm-selected="this===vm.currOver"
-                      vm-html="this.getMarkup4batterCode(vm._batterHack.code)"></span>
+                      vm-selected="this===root.currOver"
+                      vm-html="this.getMarkup4batterCode(root._batterHack.code)"></span>
             </td>
             <td class="right" vm-html="app.fmtNumber(nBFaced)">B</td>
             <!--td class="right" vm-html="app.fmtNumber(n4s)"></td-->
@@ -331,8 +331,8 @@
     <div vm-each="this.batters">
         <!--label vm-text="'Batter ' + String(index+1)">Batter X</label-->
         <input vm-value="this.name" type="text" size="20" autocomplete="off" />
-        <a class="move" href="#" data-dirn="-1" vm-onclick="vm.onClickBatterMove">&#8679;</a>
-        <a class="move"  href="#" data-dirn="1" vm-onclick="vm.onClickBatterMove">&#8681;</a>
+        <a class="move" href="#" data-dirn="-1" vm-onclick="root.onClickBatterMove">&#8679;</a>
+        <a class="move"  href="#" data-dirn="1" vm-onclick="root.onClickBatterMove">&#8681;</a>
     </div>
 </div>
 
@@ -344,8 +344,8 @@
     <div vm-each="this.bowlers">
         <!--label vm-text="'Bowler ' + String(index+1)">Bowler X</label-->
         <input vm-value="this.name" type="text" size="20" autocomplete="off" />
-        <a class="move" href="#" data-dirn="-1" vm-onclick="vm.onClickBowlerMove">&#8679;</a>
-        <a class="move"  href="#" data-dirn="1" vm-onclick="vm.onClickBowlerMove">&#8681;</a>
+        <a class="move" href="#" data-dirn="-1" vm-onclick="root.onClickBowlerMove">&#8679;</a>
+        <a class="move"  href="#" data-dirn="1" vm-onclick="root.onClickBowlerMove">&#8681;</a>
     </div>
 </div>
 
